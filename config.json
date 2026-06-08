@@ -27,18 +27,31 @@
     "cyberark", "forter", "riskified", "namogoo", "optimove",
     "ironsource", "appsflyer", "ironvest", "varonis", "armis",
     "axonius", "orca-security", "wiz", "aquasec", "aiola",
-    "guesty", "trigo", "pagaya", "lemonade", "earnest",
-    "bigpanda", "anodot", "lightricks", "solaredge", "orion-health",
-    "amdocs", "salesforce", "palo-alto-networks", "ibm",
-    "silverfort", "panaya", "intuit", "autodesk", "cyera",
-    "overwolf", "rubrik", "wsc-sports", "natural-intelligence",
-    "servicenow", "imperva", "akamai", "semperis", "remitly",
-    "innovid", "aidoc", "bigid", "etoro", "nice", "verint",
-    "coralogix", "optibus", "glassbox", "digital-turbine",
-    "checkpoint", "priority-software", "lsports",
-    "playtika", "sysaid", "altshare", "cato-networks",
-    "walkme", "nayax", "radware", "mend", "cybereason",
-    "sap", "hp-indigo"
+    "guesty", "trigo", "pagaya", "earnest", "bigpanda",
+    "anodot", "lightricks", "solaredge", "amdocs", "salesforce",
+    "palo-alto-networks", "ibm", "silverfort", "panaya", "intuit",
+    "autodesk", "cyera", "overwolf", "rubrik", "wsc-sports",
+    "natural-intelligence", "servicenow", "imperva", "akamai",
+    "semperis", "remitly", "innovid", "aidoc", "bigid", "etoro",
+    "nice", "verint", "coralogix", "optibus", "glassbox",
+    "digital-turbine", "checkpoint", "priority-software", "lsports",
+    "playtika", "sysaid", "altshare", "walkme", "radware",
+    "mend", "sap", "algosec", "allot", "anyword", "artlist",
+    "audiocodes", "bluevine", "cellebrite", "claroty", "cognyte",
+    "doubleverify", "fireblocks", "forescout", "gett", "global-e",
+    "hibob", "houzz", "infinidat", "island", "jfrog", "melio",
+    "moon-active", "myheritage", "navan", "placer-ai", "plarium",
+    "redis", "sapiens", "sentinelone", "sisense", "skai",
+    "stratasys", "synamedia", "teads", "trax-retail", "vast-data",
+    "verbit",
+    "888-holdings", "actimize", "any-do", "applause", "oddity",
+    "via-transportation", "yotpo", "ai21-labs", "at-bay",
+    "atera-networks", "biocatch", "bizzabo", "bright-data",
+    "bringg", "cheq", "cloudinary", "connecteam", "controlup",
+    "coro", "cymulate", "cynet", "datarails", "dealhub",
+    "dream-security", "drivenets", "duda", "dynamic-yield",
+    "earnix", "elementor", "exodigo", "fabric", "firebolt",
+    "hailo", "honeybook", "hunters", "innoviz"
   ],
 
   "comeet_companies": [
@@ -68,6 +81,7 @@
     "Director of Engineering OR Engineering Manager \"Check Point\" Israel site:careers.checkpoint.com OR site:linkedin.com/jobs",
     "Director of Engineering OR Engineering Manager Dell Israel site:dell.com/en-us/dt/careers OR site:linkedin.com/jobs",
     "Director of Engineering OR Engineering Manager eBay Israel site:jobs.ebayinc.com OR site:linkedin.com/jobs",
-    "Director of Engineering OR Engineering Manager \"Applied Materials\" Israel site:linkedin.com/jobs"
+    "Director of Engineering OR Engineering Manager \"Applied Materials\" Israel site:linkedin.com/jobs",
+    "Director of Engineering OR Engineering Manager Mobileye Israel site:intel.com/jobs OR site:linkedin.com/jobs"
   ]
 }
