@@ -14,20 +14,35 @@
   "max_days_old": 30,
   "jobs_per_search": 15,
   "search_frequency_cron": "0 7,13,19 * * 0-4",
+
   "ats_companies": [
-    "wix", "monday", "ironSource", "similar-web", "fiverr",
-    "kaltura", "checkmarx", "perion", "taboola", "outbrain",
-    "gong", "papaya-global", "rapyd", "tipalti", "payoneer",
-    "nuvei", "fundbox", "lemonade", "next-insurance", "hippo",
-    "deel", "rippling", "lattice", "linear", "notion",
-    "vercel", "netlify", "render", "planetscale", "neon",
-    "anthropic", "cohere", "hugging-face", "weights-biases",
-    "cloudflare", "datadog", "elastic", "hashicorp", "confluent"
+    "wix", "monday", "fiverr", "similar-web", "kaltura",
+    "checkmarx", "perion", "taboola", "outbrain", "gong",
+    "papaya-global", "rapyd", "tipalti", "payoneer", "nuvei",
+    "fundbox", "lemonade", "next-insurance", "hippo", "deel",
+    "rippling", "lattice", "linear", "notion", "vercel",
+    "netlify", "render", "planetscale", "neon", "anthropic",
+    "cohere", "hugging-face", "weights-biases", "cloudflare",
+    "datadog", "elastic", "hashicorp", "confluent", "snyk",
+    "cyberark", "forter", "riskified", "namogoo", "optimove",
+    "ironsource", "appsflyer", "ironvest", "varonis", "armis",
+    "axonius", "orca-security", "wiz", "aquasec", "aiola",
+    "guesty", "trigo", "pagaya", "lemonade", "earnest",
+    "bigpanda", "anodot", "lightricks", "solaredge", "orion-health"
   ],
+
+  "comeet_companies": [
+    "monday-com", "wix", "gong", "ironSource", "fiverr",
+    "lightricks", "trigo", "pagaya", "bigpanda", "anodot"
+  ],
+
   "search_queries_extra": [
-    "VP Engineering AI startup remote",
+    "VP Engineering AI startup remote 2025",
     "Director of Engineering Israel platform infrastructure",
     "VP R&D generative AI company remote",
-    "Engineering Manager AI infrastructure Israel remote"
+    "Engineering Manager AI infrastructure Israel remote",
+    "Head of Engineering Tel Aviv startup",
+    "\"VP Engineering\" OR \"Director of Engineering\" Israel site:comeet.com",
+    "\"VP R&D\" OR \"VP of R&D\" Israel site:linkedin.com/jobs"
   ]
 }

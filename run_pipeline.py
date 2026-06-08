@@ -58,20 +58,32 @@ def load_existing_jobs() -> list[dict]:
 
 
 def extract_json_array(text: str) -> list:
-    """Extract the first JSON array from a text blob."""
-    match = re.search(r'\[[\s\S]*?\]', text)
-    if match:
+    """Extract the first JSON array from a text blob (handles markdown code blocks)."""
+    # Strip markdown code fences first
+    stripped = re.sub(r'```(?:json)?\s*', '', text).strip()
+
+    # Try largest array match (greedy) first for complete results
+    for src in [stripped, text]:
+        match = re.search(r'\[[\s\S]*\]', src)
+        if match:
+            try:
+                result = json.loads(match.group())
+                if isinstance(result, list):
+                    return result
+            except json.JSONDecodeError:
+                pass
+
+    # Last resort: find first '[' to last ']' in entire text
+    start = text.find('[')
+    end = text.rfind(']')
+    if start != -1 and end > start:
         try:
-            return json.loads(match.group())
+            result = json.loads(text[start:end+1])
+            if isinstance(result, list):
+                return result
         except json.JSONDecodeError:
             pass
-    # Try to find JSON with relaxed matching
-    match = re.search(r'\[[\s\S]*\]', text)
-    if match:
-        try:
-            return json.loads(match.group())
-        except json.JSONDecodeError:
-            pass
+
     return []
 
 
@@ -233,7 +245,23 @@ After searching (use at least 4-5 searches), return ONLY a JSON array of 8-15 jo
             print(f"  [WARN] Unexpected stop_reason: {resp.stop_reason}")
             break
 
+    # If extraction fails, do a cleanup pass asking Claude to reformat
     jobs = extract_json_array(final_text)
+    if not jobs and final_text.strip():
+        print("  JSON extraction failed, asking Claude to reformat...")
+        try:
+            cleanup = client.messages.create(
+                model="claude-haiku-4-5-20251001",
+                max_tokens=4096,
+                messages=[{
+                    "role": "user",
+                    "content": f"Extract all job postings from the following text and return ONLY a valid JSON array. No markdown, no explanation, just the array starting with [ and ending with ].\n\nRequired fields per job: company, title, location, url, posted (YYYY-MM-DD), description.\n\nText:\n{final_text[:6000]}"
+                }]
+            )
+            jobs = extract_json_array(cleanup.content[0].text)
+            print(f"  Cleanup pass found {len(jobs)} jobs")
+        except Exception as e:
+            print(f"  [WARN] Cleanup pass failed: {e}")
     now = utcnow_iso()
     for job in jobs:
         job.setdefault("id", str(uuid.uuid4()))
@@ -358,6 +386,35 @@ def scrape_ats(config: dict) -> list[dict]:
                         "description": job.get("descriptionSocial", "")[:500],
                         "scraped_at": now,
                         "source": "ats_ashby",
+                    })
+        except requests.RequestException:
+            pass
+
+    # --- Comeet (popular Israeli ATS) ---
+    for company in config.get("comeet_companies", []):
+        try:
+            co_url = f"https://www.comeet.com/jobs/{company}/all"
+            r = requests.get(co_url, headers={**headers, "Accept": "application/json"}, timeout=10)
+            if r.ok:
+                data = r.json() if r.headers.get("content-type","").startswith("application/json") else {}
+                for job in data.get("positions", []):
+                    title = job.get("name", "").lower()
+                    if not any(kw in title for kw in target_keywords):
+                        continue
+                    posted = job.get("date_added", today.strftime("%Y-%m-%d"))[:10]
+                    loc = job.get("location", {}).get("city", "Israel")
+                    slug = job.get("uid", "")
+                    url = f"https://www.comeet.com/jobs/{company}/{slug}"
+                    jobs.append({
+                        "id": str(uuid.uuid4()),
+                        "company": company.replace("-", " ").title(),
+                        "title": job.get("name", ""),
+                        "location": loc,
+                        "url": url,
+                        "posted": posted,
+                        "description": job.get("details", "")[:500],
+                        "scraped_at": now,
+                        "source": "ats_comeet",
                     })
         except requests.RequestException:
             pass
