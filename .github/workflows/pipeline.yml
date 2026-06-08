@@ -1,0 +1,49 @@
+name: Job Search Pipeline
+
+on:
+  schedule:
+    # 3x daily Sun–Thu: 07:00, 13:00, 19:00 UTC
+    - cron: '0 7 * * 0-4'
+    - cron: '0 13 * * 0-4'
+    - cron: '0 19 * * 0-4'
+  workflow_dispatch:  # allow manual trigger from GitHub UI
+
+permissions:
+  contents: write
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run pipeline
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          BRAVE_API_KEY: ${{ secrets.BRAVE_API_KEY }}
+        run: python run_pipeline.py
+
+      - name: Upload artifacts (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pipeline-logs-${{ github.run_id }}
+          path: |
+            scored_jobs.json
+            docs/scored_jobs.json
+          retention-days: 7

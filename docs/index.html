@@ -1,0 +1,1913 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Job Finder</title>
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#1C1B1F" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#FFFBFE" media="(prefers-color-scheme: light)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+/* ═══════════════════════════════════════════════
+   MATERIAL 3 DESIGN TOKENS
+═══════════════════════════════════════════════ */
+:root {
+  --md-primary: #6750A4;
+  --md-on-primary: #fff;
+  --md-primary-container: #EADDFF;
+  --md-on-primary-container: #21005D;
+  --md-secondary: #625B71;
+  --md-on-secondary: #fff;
+  --md-secondary-container: #E8DEF8;
+  --md-on-secondary-container: #1D192B;
+  --md-tertiary: #7D5260;
+  --md-on-tertiary: #fff;
+  --md-tertiary-container: #FFD8E4;
+  --md-on-tertiary-container: #31111D;
+  --md-error: #B3261E;
+  --md-error-container: #F9DEDC;
+  --md-surface: #FFFBFE;
+  --md-surface-1: #F4EFF7;
+  --md-surface-2: #EDE8F5;
+  --md-surface-3: #E6DFF2;
+  --md-on-surface: #1C1B1F;
+  --md-on-surface-variant: #49454F;
+  --md-outline: #79747E;
+  --md-outline-variant: #CAC4D0;
+  --md-inverse-surface: #313033;
+  --md-inverse-on-surface: #F4EFF4;
+  --md-shadow: rgba(0,0,0,0.15);
+  --md-scrim: rgba(0,0,0,0.4);
+  --md-score-high: #1B5E20;
+  --md-score-high-bg: #C8E6C9;
+  --md-score-mid: #1565C0;
+  --md-score-mid-bg: #BBDEFB;
+  --md-score-low: #E65100;
+  --md-score-low-bg: #FFE0B2;
+  --md-score-bad: #B71C1C;
+  --md-score-bad-bg: #FFCDD2;
+  --nav-h: 80px;
+  --top-h: 64px;
+  --radius-s: 8px;
+  --radius-m: 12px;
+  --radius-l: 16px;
+  --radius-xl: 28px;
+  font-family: 'Roboto Flex', 'Roboto', system-ui, sans-serif;
+}
+
+[data-theme="dark"] {
+  --md-primary: #D0BCFF;
+  --md-on-primary: #381E72;
+  --md-primary-container: #4F378B;
+  --md-on-primary-container: #EADDFF;
+  --md-secondary: #CCC2DC;
+  --md-on-secondary: #332D41;
+  --md-secondary-container: #4A4458;
+  --md-on-secondary-container: #E8DEF8;
+  --md-tertiary: #EFB8C8;
+  --md-on-tertiary: #492532;
+  --md-tertiary-container: #633B48;
+  --md-on-tertiary-container: #FFD8E4;
+  --md-error: #F2B8B5;
+  --md-error-container: #8C1D18;
+  --md-surface: #1C1B1F;
+  --md-surface-1: #25232A;
+  --md-surface-2: #2B2930;
+  --md-surface-3: #302E38;
+  --md-on-surface: #E6E1E5;
+  --md-on-surface-variant: #CAC4D0;
+  --md-outline: #938F99;
+  --md-outline-variant: #49454F;
+  --md-inverse-surface: #E6E1E5;
+  --md-inverse-on-surface: #313033;
+  --md-shadow: rgba(0,0,0,0.5);
+  --md-scrim: rgba(0,0,0,0.7);
+  --md-score-high: #A5D6A7;
+  --md-score-high-bg: #1B5E20;
+  --md-score-mid: #90CAF9;
+  --md-score-mid-bg: #0D47A1;
+  --md-score-low: #FFCC80;
+  --md-score-low-bg: #E65100;
+  --md-score-bad: #EF9A9A;
+  --md-score-bad-bg: #B71C1C;
+}
+
+/* ═══════════════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--md-surface);
+  color: var(--md-on-surface);
+  min-height: 100dvh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+button { cursor: pointer; border: none; background: none; font: inherit; color: inherit; }
+input, textarea { font: inherit; color: inherit; background: none; border: none; outline: none; }
+a { color: var(--md-primary); text-decoration: none; }
+a:hover { text-decoration: underline; }
+svg { display: block; }
+
+/* ═══════════════════════════════════════════════
+   APP SHELL
+═══════════════════════════════════════════════ */
+#app { display: flex; flex-direction: column; min-height: 100dvh; }
+
+/* Top App Bar */
+.top-bar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: var(--top-h);
+  background: var(--md-surface-2);
+  display: flex; align-items: center; gap: 8px;
+  padding: 0 16px;
+  box-shadow: 0 1px 0 var(--md-outline-variant);
+}
+.top-bar-title {
+  flex: 1; font-size: 22px; font-weight: 600;
+  color: var(--md-on-surface);
+}
+.top-bar-title span { color: var(--md-primary); }
+.icon-btn {
+  width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--md-on-surface-variant);
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+.icon-btn:hover { background: color-mix(in srgb, var(--md-on-surface) 8%, transparent); }
+.icon-btn:active { background: color-mix(in srgb, var(--md-on-surface) 16%, transparent); }
+
+/* Content area */
+#content {
+  flex: 1;
+  padding-top: var(--top-h);
+  padding-bottom: var(--nav-h);
+}
+
+/* Bottom Nav */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+  height: var(--nav-h);
+  background: var(--md-surface-2);
+  display: flex; align-items: stretch;
+  box-shadow: 0 -1px 0 var(--md-outline-variant);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+.nav-item {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 4px; padding: 8px 0;
+  color: var(--md-on-surface-variant);
+  transition: color 0.15s;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.nav-item.active { color: var(--md-primary); }
+.nav-item .nav-indicator {
+  width: 64px; height: 32px; border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s;
+}
+.nav-item.active .nav-indicator { background: var(--md-primary-container); }
+.nav-item .nav-label { font-size: 12px; font-weight: 500; }
+.nav-icon { font-size: 22px; }
+
+/* FAB */
+.fab {
+  position: fixed; right: 20px; bottom: calc(var(--nav-h) + 16px); z-index: 99;
+  width: 56px; height: 56px; border-radius: var(--radius-l);
+  background: var(--md-primary-container);
+  color: var(--md-on-primary-container);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 12px var(--md-shadow);
+  font-size: 24px; font-weight: 300;
+  transition: box-shadow 0.2s, transform 0.15s;
+}
+.fab:hover { box-shadow: 0 6px 16px var(--md-shadow); }
+.fab:active { transform: scale(0.96); }
+
+/* ═══════════════════════════════════════════════
+   TAB PAGES
+═══════════════════════════════════════════════ */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ═══════════════════════════════════════════════
+   JOBS PAGE
+═══════════════════════════════════════════════ */
+.search-bar {
+  padding: 12px 16px 8px;
+  display: flex; gap: 8px;
+}
+.search-input-wrap {
+  flex: 1; display: flex; align-items: center;
+  background: var(--md-surface-3);
+  border-radius: var(--radius-xl);
+  padding: 0 16px; gap: 8px; height: 48px;
+}
+.search-input-wrap input {
+  flex: 1; background: none; font-size: 16px;
+  color: var(--md-on-surface);
+}
+.search-input-wrap input::placeholder { color: var(--md-on-surface-variant); }
+
+.filter-row {
+  padding: 0 16px 12px;
+  display: flex; gap: 8px; overflow-x: auto;
+  scrollbar-width: none;
+}
+.filter-row::-webkit-scrollbar { display: none; }
+.filter-chip {
+  flex-shrink: 0; height: 32px; padding: 0 12px;
+  border-radius: 8px; font-size: 14px; font-weight: 500;
+  border: 1.5px solid var(--md-outline-variant);
+  color: var(--md-on-surface-variant);
+  display: flex; align-items: center; gap: 6px;
+  transition: all 0.15s; white-space: nowrap;
+  cursor: pointer;
+}
+.filter-chip.active {
+  background: var(--md-secondary-container);
+  border-color: var(--md-secondary-container);
+  color: var(--md-on-secondary-container);
+}
+
+.jobs-list {
+  padding: 0 16px 16px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+
+.empty-state {
+  text-align: center; padding: 60px 32px;
+  color: var(--md-on-surface-variant);
+}
+.empty-state .empty-icon { font-size: 64px; margin-bottom: 16px; }
+.empty-state h3 { font-size: 20px; font-weight: 600; margin-bottom: 8px; color: var(--md-on-surface); }
+.empty-state p { font-size: 14px; line-height: 1.6; }
+
+/* ═══════════════════════════════════════════════
+   JOB CARD
+═══════════════════════════════════════════════ */
+.job-card {
+  background: var(--md-surface-1);
+  border-radius: var(--radius-l);
+  overflow: hidden;
+  border: 1.5px solid var(--md-outline-variant);
+  transition: border-color 0.15s;
+}
+.job-card:hover { border-color: var(--md-outline); }
+
+.card-header {
+  padding: 16px 16px 12px;
+  display: flex; gap: 12px;
+  cursor: pointer;
+}
+.card-score {
+  flex-shrink: 0; width: 40px; height: 40px; border-radius: var(--radius-m);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 700;
+}
+.score-high { background: var(--md-score-high-bg); color: var(--md-score-high); }
+.score-mid  { background: var(--md-score-mid-bg);  color: var(--md-score-mid); }
+.score-low  { background: var(--md-score-low-bg);  color: var(--md-score-low); }
+.score-bad  { background: var(--md-score-bad-bg);  color: var(--md-score-bad); }
+
+.card-info { flex: 1; min-width: 0; }
+.card-company { font-size: 12px; font-weight: 500; color: var(--md-on-surface-variant); text-transform: uppercase; letter-spacing: 0.4px; }
+.card-title { font-size: 15px; font-weight: 600; color: var(--md-on-surface); margin: 2px 0 4px; line-height: 1.3; }
+.card-meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.meta-chip {
+  font-size: 11px; font-weight: 500; padding: 2px 8px;
+  border-radius: 6px; background: var(--md-surface-3);
+  color: var(--md-on-surface-variant);
+}
+.meta-chip.remote { background: color-mix(in srgb, var(--md-primary) 15%, transparent); color: var(--md-primary); }
+.meta-chip.source { background: color-mix(in srgb, var(--md-tertiary) 15%, transparent); color: var(--md-tertiary); }
+
+.status-row {
+  padding: 0 16px 12px;
+  display: flex; gap: 6px; flex-wrap: wrap; align-items: center;
+}
+.status-btn {
+  height: 28px; padding: 0 10px; border-radius: 6px;
+  font-size: 12px; font-weight: 600;
+  border: 1.5px solid transparent;
+  transition: all 0.15s;
+}
+.status-btn.saved    { border-color: #7986CB; color: #7986CB; }
+.status-btn.applied  { border-color: #9C27B0; color: #9C27B0; }
+.status-btn.interview{ border-color: #FFA726; color: #FFA726; }
+.status-btn.offer    { border-color: #4CAF50; color: #4CAF50; }
+.status-btn.rejected { border-color: #EF5350; color: #EF5350; }
+.status-btn.active-status {
+  color: #fff !important;
+}
+.status-btn.saved.active-status    { background: #7986CB; }
+.status-btn.applied.active-status  { background: #9C27B0; }
+.status-btn.interview.active-status{ background: #FFA726; }
+.status-btn.offer.active-status    { background: #4CAF50; }
+.status-btn.rejected.active-status { background: #EF5350; }
+
+.card-link {
+  margin-left: auto; font-size: 11px; padding: 4px 8px;
+  border-radius: 6px; background: var(--md-surface-3);
+  color: var(--md-on-surface-variant); text-decoration: none;
+  white-space: nowrap; align-self: center;
+  transition: background 0.15s;
+}
+.card-link:hover { background: var(--md-primary-container); color: var(--md-on-primary-container); text-decoration: none; }
+
+/* Expandable body */
+.card-body {
+  border-top: 1px solid var(--md-outline-variant);
+  overflow: hidden;
+  max-height: 0; transition: max-height 0.3s ease;
+}
+.card-body.open { max-height: 2000px; }
+
+.card-description {
+  padding: 12px 16px;
+  font-size: 13px; line-height: 1.6;
+  color: var(--md-on-surface-variant);
+}
+
+/* AI action buttons */
+.ai-actions {
+  padding: 0 16px 12px;
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
+.ai-btn {
+  display: flex; align-items: center; gap: 5px;
+  padding: 6px 12px; border-radius: 8px;
+  font-size: 12px; font-weight: 500;
+  background: var(--md-surface-3);
+  color: var(--md-on-surface);
+  transition: all 0.15s;
+  border: 1px solid var(--md-outline-variant);
+}
+.ai-btn:hover { background: var(--md-primary-container); border-color: var(--md-primary); color: var(--md-on-primary-container); }
+.ai-btn .ai-icon { font-size: 14px; }
+
+/* Interview rounds */
+.rounds-section { padding: 0 16px 12px; }
+.rounds-title {
+  font-size: 12px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.5px; color: var(--md-on-surface-variant);
+  margin-bottom: 8px; display: flex; align-items: center; gap: 8px;
+}
+.add-round-btn {
+  font-size: 11px; padding: 2px 8px; border-radius: 6px;
+  background: var(--md-primary-container); color: var(--md-on-primary-container);
+  font-weight: 600;
+}
+.round-chip {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px; border-radius: var(--radius-m);
+  background: var(--md-surface-3); margin-bottom: 6px;
+  font-size: 13px;
+}
+.round-stage {
+  font-weight: 600; color: var(--md-primary);
+  text-transform: capitalize;
+}
+.round-outcome { margin-left: auto; font-size: 11px; padding: 2px 6px; border-radius: 4px; }
+.round-outcome.pending  { background: var(--md-surface-2); color: var(--md-on-surface-variant); }
+.round-outcome.passed   { background: #1B5E20; color: #A5D6A7; }
+.round-outcome.failed   { background: #B71C1C; color: #EF9A9A; }
+
+/* Notes */
+.notes-section { padding: 0 16px 16px; }
+.notes-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--md-on-surface-variant); margin-bottom: 6px; }
+.notes-input {
+  width: 100%; min-height: 72px; resize: vertical;
+  background: var(--md-surface-3); border-radius: var(--radius-m);
+  padding: 10px 12px; font-size: 13px; line-height: 1.5;
+  color: var(--md-on-surface); border: 1px solid var(--md-outline-variant);
+  transition: border-color 0.15s;
+}
+.notes-input:focus { border-color: var(--md-primary); }
+.notes-input::placeholder { color: var(--md-on-surface-variant); }
+
+.score-reason {
+  padding: 0 16px 12px;
+  font-size: 12px; color: var(--md-on-surface-variant);
+  font-style: italic; line-height: 1.5;
+}
+
+/* ═══════════════════════════════════════════════
+   ANALYTICS PAGE
+═══════════════════════════════════════════════ */
+.analytics-page { padding: 20px 16px; }
+.analytics-title { font-size: 22px; font-weight: 700; margin-bottom: 20px; }
+.analytics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+.stat-card {
+  background: var(--md-surface-1); border-radius: var(--radius-l);
+  padding: 16px; border: 1.5px solid var(--md-outline-variant);
+}
+.stat-value { font-size: 32px; font-weight: 700; color: var(--md-primary); }
+.stat-label { font-size: 13px; color: var(--md-on-surface-variant); margin-top: 4px; }
+.chart-card {
+  background: var(--md-surface-1); border-radius: var(--radius-l);
+  padding: 16px; border: 1.5px solid var(--md-outline-variant);
+  margin-bottom: 16px;
+}
+.chart-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 16px; color: var(--md-on-surface-variant); text-transform: uppercase; letter-spacing: 0.5px; }
+.funnel-bar { margin-bottom: 10px; }
+.funnel-label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px; }
+.funnel-track { height: 28px; background: var(--md-surface-3); border-radius: 6px; overflow: hidden; }
+.funnel-fill { height: 100%; border-radius: 6px; transition: width 0.5s ease; display: flex; align-items: center; padding: 0 8px; font-size: 11px; font-weight: 600; color: #fff; }
+
+/* ═══════════════════════════════════════════════
+   SUPPORT PAGE
+═══════════════════════════════════════════════ */
+.support-page {
+  display: flex; flex-direction: column;
+  height: calc(100dvh - var(--top-h) - var(--nav-h));
+}
+.support-header { padding: 16px; border-bottom: 1px solid var(--md-outline-variant); }
+.support-header h2 { font-size: 18px; font-weight: 600; }
+.support-header p { font-size: 13px; color: var(--md-on-surface-variant); margin-top: 4px; }
+.chat-messages {
+  flex: 1; overflow-y: auto; padding: 16px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.message {
+  max-width: 85%; padding: 12px 16px;
+  border-radius: var(--radius-l); font-size: 14px; line-height: 1.6;
+  animation: fadeIn 0.2s ease;
+}
+.message.assistant {
+  align-self: flex-start;
+  background: var(--md-surface-2);
+  border-bottom-left-radius: var(--radius-s);
+}
+.message.user {
+  align-self: flex-end;
+  background: var(--md-primary-container);
+  color: var(--md-on-primary-container);
+  border-bottom-right-radius: var(--radius-s);
+}
+.message.typing { color: var(--md-on-surface-variant); font-style: italic; }
+.chat-input-row {
+  padding: 12px 16px;
+  border-top: 1px solid var(--md-outline-variant);
+  display: flex; gap: 8px; align-items: flex-end;
+}
+.chat-input {
+  flex: 1; background: var(--md-surface-3);
+  border-radius: var(--radius-l); padding: 10px 16px;
+  font-size: 15px; color: var(--md-on-surface); resize: none;
+  max-height: 120px; line-height: 1.5;
+  border: 1px solid var(--md-outline-variant);
+  transition: border-color 0.15s;
+}
+.chat-input:focus { border-color: var(--md-primary); }
+.send-btn {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--md-primary); color: var(--md-on-primary);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+  transition: opacity 0.15s, transform 0.15s;
+}
+.send-btn:disabled { opacity: 0.4; }
+.send-btn:not(:disabled):active { transform: scale(0.92); }
+
+/* ═══════════════════════════════════════════════
+   MODALS
+═══════════════════════════════════════════════ */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: var(--md-scrim);
+  display: flex; align-items: flex-end;
+  opacity: 0; pointer-events: none; transition: opacity 0.2s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal {
+  width: 100%; max-width: 640px; margin: 0 auto;
+  background: var(--md-surface-2); border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  padding: 24px 20px calc(24px + env(safe-area-inset-bottom, 0));
+  transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  max-height: 92dvh; overflow-y: auto;
+}
+.modal-overlay.open .modal { transform: translateY(0); }
+.modal-handle { width: 32px; height: 4px; background: var(--md-outline-variant); border-radius: 2px; margin: -12px auto 20px; }
+.modal-title { font-size: 20px; font-weight: 700; margin-bottom: 16px; }
+
+/* AI Output modal - full screen */
+.ai-modal-overlay {
+  position: fixed; inset: 0; z-index: 300;
+  background: var(--md-surface);
+  transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  display: flex; flex-direction: column;
+}
+.ai-modal-overlay.open { transform: translateY(0); }
+.ai-modal-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--md-outline-variant);
+  display: flex; align-items: center; gap: 12px;
+  background: var(--md-surface-2);
+  flex-shrink: 0;
+}
+.ai-modal-title { flex: 1; font-size: 17px; font-weight: 600; }
+.ai-modal-body {
+  flex: 1; overflow-y: auto; padding: 20px;
+  font-size: 15px; line-height: 1.8;
+  color: var(--md-on-surface);
+  white-space: pre-wrap;
+}
+.ai-modal-actions {
+  padding: 12px 20px calc(12px + env(safe-area-inset-bottom,0));
+  border-top: 1px solid var(--md-outline-variant);
+  display: flex; gap: 8px;
+  background: var(--md-surface-2);
+  flex-shrink: 0;
+}
+
+/* Settings sheet */
+.settings-section { margin-bottom: 20px; }
+.settings-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--md-on-surface-variant); margin-bottom: 8px; }
+.settings-input {
+  width: 100%; height: 48px; background: var(--md-surface-3);
+  border-radius: var(--radius-m); padding: 0 16px;
+  font-size: 14px; color: var(--md-on-surface);
+  border: 1.5px solid var(--md-outline-variant);
+  transition: border-color 0.15s;
+}
+.settings-input:focus { border-color: var(--md-primary); }
+
+/* Round form */
+.form-row { margin-bottom: 14px; }
+.form-label { font-size: 13px; font-weight: 500; margin-bottom: 6px; display: block; color: var(--md-on-surface-variant); }
+.form-input, .form-select {
+  width: 100%; height: 48px; background: var(--md-surface-3);
+  border-radius: var(--radius-m); padding: 0 14px;
+  font-size: 14px; color: var(--md-on-surface);
+  border: 1.5px solid var(--md-outline-variant);
+  transition: border-color 0.15s; appearance: none;
+}
+.form-input:focus, .form-select:focus { border-color: var(--md-primary); }
+.form-select option { background: var(--md-surface-2); }
+
+/* Buttons */
+.btn {
+  height: 40px; padding: 0 24px; border-radius: var(--radius-xl);
+  font-size: 14px; font-weight: 600;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  transition: all 0.15s;
+}
+.btn-primary { background: var(--md-primary); color: var(--md-on-primary); }
+.btn-primary:hover { filter: brightness(1.1); }
+.btn-tonal { background: var(--md-secondary-container); color: var(--md-on-secondary-container); }
+.btn-text { color: var(--md-primary); }
+.btn:disabled { opacity: 0.4; pointer-events: none; }
+
+/* Toast */
+.toast {
+  position: fixed; bottom: calc(var(--nav-h) + 16px); left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--md-inverse-surface); color: var(--md-inverse-on-surface);
+  padding: 12px 20px; border-radius: var(--radius-m);
+  font-size: 14px; font-weight: 500;
+  z-index: 500; white-space: nowrap;
+  opacity: 0; transition: all 0.25s;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* Voice sim stage selector */
+.stage-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.stage-pill {
+  padding: 8px 16px; border-radius: var(--radius-xl);
+  border: 1.5px solid var(--md-outline-variant);
+  font-size: 13px; font-weight: 500;
+  color: var(--md-on-surface-variant);
+  transition: all 0.15s; cursor: pointer;
+}
+.stage-pill.selected {
+  background: var(--md-primary-container);
+  border-color: var(--md-primary);
+  color: var(--md-on-primary-container);
+}
+
+/* Loading spinner */
+.spinner {
+  width: 20px; height: 20px;
+  border: 2.5px solid color-mix(in srgb, currentColor 30%, transparent);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* Add job URL textarea */
+.url-textarea {
+  width: 100%; min-height: 80px; resize: vertical;
+  background: var(--md-surface-3); border-radius: var(--radius-m);
+  padding: 12px 14px; font-size: 14px; color: var(--md-on-surface);
+  border: 1.5px solid var(--md-outline-variant); line-height: 1.5;
+  transition: border-color 0.15s; margin-bottom: 12px;
+}
+.url-textarea:focus { border-color: var(--md-primary); }
+
+/* Markdown-like rendering in AI output */
+.ai-modal-body h1, .ai-modal-body h2, .ai-modal-body h3 {
+  color: var(--md-primary); margin: 1em 0 0.4em;
+}
+.ai-modal-body strong { color: var(--md-on-surface); }
+.ai-modal-body ul, .ai-modal-body ol { padding-left: 20px; }
+.ai-modal-body li { margin-bottom: 4px; }
+.ai-modal-body hr { border: none; border-top: 1px solid var(--md-outline-variant); margin: 16px 0; }
+
+/* Responsive */
+@media (min-width: 640px) {
+  .jobs-list { max-width: 640px; margin: 0 auto; }
+  .modal { margin-bottom: 32px; border-radius: var(--radius-xl); }
+  .modal-overlay { align-items: center; }
+  .analytics-page { max-width: 640px; margin: 0 auto; }
+  .support-page { max-width: 640px; margin: 0 auto; height: auto; min-height: calc(100dvh - var(--top-h) - var(--nav-h)); }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ APP SHELL ═══ -->
+<div id="app">
+  <!-- Top Bar -->
+  <header class="top-bar">
+    <div class="top-bar-title">Job <span>Finder</span></div>
+    <button class="icon-btn" id="refreshBtn" title="Refresh jobs" aria-label="Refresh">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+    </button>
+    <button class="icon-btn" id="darkModeBtn" title="Toggle dark mode" aria-label="Dark mode">
+      <svg id="darkIcon" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36A5.99 5.99 0 0 1 17 12c0-3.31-2.69-6-6-6-1.03 0-2 .27-2.85.73A9.01 9.01 0 0 1 12 3z"/></svg>
+    </button>
+    <button class="icon-btn" id="settingsBtn" title="Settings" aria-label="Settings">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+    </button>
+  </header>
+
+  <!-- Content -->
+  <main id="content">
+    <!-- JOBS PAGE -->
+    <div id="page-jobs" class="page active">
+      <div class="search-bar">
+        <div class="search-input-wrap">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="color:var(--md-on-surface-variant)"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          <input type="search" id="searchInput" placeholder="Search jobs, companies…" autocomplete="off">
+        </div>
+      </div>
+      <div class="filter-row" id="filterRow">
+        <button class="filter-chip active" data-filter="all">All</button>
+        <button class="filter-chip" data-filter="saved">Saved</button>
+        <button class="filter-chip" data-filter="applied">Applied</button>
+        <button class="filter-chip" data-filter="interview">Interview</button>
+        <button class="filter-chip" data-filter="offer">Offer</button>
+        <button class="filter-chip" data-filter="rejected">Rejected</button>
+        <button class="filter-chip" data-filter="score8">Score 8+</button>
+        <button class="filter-chip" data-filter="remote">Remote</button>
+      </div>
+      <div class="jobs-list" id="jobsList"></div>
+    </div>
+
+    <!-- ANALYTICS PAGE -->
+    <div id="page-analytics" class="page">
+      <div class="analytics-page">
+        <div class="analytics-title">📊 Analytics</div>
+        <div class="analytics-grid" id="statsGrid"></div>
+        <div class="chart-card">
+          <h3>Application Funnel</h3>
+          <div id="funnelChart"></div>
+        </div>
+        <div class="chart-card">
+          <h3>Score Distribution</h3>
+          <canvas id="scoreChart" height="180"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3>Status Breakdown</h3>
+          <canvas id="statusChart" height="180"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUPPORT PAGE -->
+    <div id="page-support" class="page">
+      <div class="support-page">
+        <div class="support-header">
+          <h2>💙 Maya — Your Career Coach</h2>
+          <p>Mental support & guidance through your job search journey</p>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+          <div class="message assistant">
+            Hi! I'm Maya, your personal career coach. I'm here to support you through every stage of your job search — the highs, the rejections, the waiting, and the wins.
+
+How are you feeling today?
+          </div>
+        </div>
+        <div class="chat-input-row">
+          <textarea class="chat-input" id="chatInput" placeholder="Share what's on your mind…" rows="1"></textarea>
+          <button class="send-btn" id="sendBtn" aria-label="Send">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Bottom Nav -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" data-page="jobs">
+      <div class="nav-indicator"><span class="nav-icon">💼</span></div>
+      <span class="nav-label">Jobs</span>
+    </button>
+    <button class="nav-item" data-page="analytics">
+      <div class="nav-indicator"><span class="nav-icon">📊</span></div>
+      <span class="nav-label">Analytics</span>
+    </button>
+    <button class="nav-item" data-page="support">
+      <div class="nav-indicator"><span class="nav-icon">💙</span></div>
+      <span class="nav-label">Support</span>
+    </button>
+  </nav>
+</div>
+
+<!-- FAB -->
+<button class="fab" id="addJobFab" title="Add job" aria-label="Add job">＋</button>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- ═══ ADD JOB MODAL ═══ -->
+<div class="modal-overlay" id="addJobModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Add Job</div>
+    <div class="form-row">
+      <label class="form-label">Job URL (or paste any link)</label>
+      <input type="url" class="form-input" id="addJobUrl" placeholder="https://…">
+    </div>
+    <div class="form-row">
+      <label class="form-label">Job Description (paste text — Claude will extract details)</label>
+      <textarea class="url-textarea" id="addJobDesc" placeholder="Paste the job description here…"></textarea>
+    </div>
+    <div id="addJobPreview" style="display:none">
+      <div class="form-row">
+        <label class="form-label">Company</label>
+        <input type="text" class="form-input" id="addJobCompany" placeholder="Company name">
+      </div>
+      <div class="form-row">
+        <label class="form-label">Title</label>
+        <input type="text" class="form-input" id="addJobTitle" placeholder="Job title">
+      </div>
+      <div class="form-row">
+        <label class="form-label">Location</label>
+        <input type="text" class="form-input" id="addJobLocation" placeholder="City, Country or Remote">
+      </div>
+      <div class="form-row">
+        <label class="form-label">Posted Date</label>
+        <input type="date" class="form-input" id="addJobPosted">
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <button class="btn btn-tonal" id="addJobExtractBtn">
+        <span>✨ Extract with Claude</span>
+      </button>
+      <button class="btn btn-primary" id="addJobSaveBtn" style="display:none">Save Job</button>
+      <button class="btn btn-text" id="addJobCancelBtn" style="margin-left:auto">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ INTERVIEW ROUND MODAL ═══ -->
+<div class="modal-overlay" id="roundModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Add Interview Round</div>
+    <div class="form-row">
+      <label class="form-label">Stage</label>
+      <select class="form-select" id="roundStage">
+        <option value="phone">Phone Screen</option>
+        <option value="hr">HR / Recruiter</option>
+        <option value="technical">Technical</option>
+        <option value="manager">Hiring Manager</option>
+        <option value="executive">Executive / VP</option>
+        <option value="final">Final Round</option>
+        <option value="offer">Offer Discussion</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label class="form-label">Date</label>
+      <input type="date" class="form-input" id="roundDate">
+    </div>
+    <div class="form-row">
+      <label class="form-label">Interviewer (optional)</label>
+      <input type="text" class="form-input" id="roundInterviewer" placeholder="Name / role">
+    </div>
+    <div class="form-row">
+      <label class="form-label">Outcome</label>
+      <select class="form-select" id="roundOutcome">
+        <option value="pending">Pending</option>
+        <option value="passed">Passed ✓</option>
+        <option value="failed">Did not pass</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <button class="btn btn-primary" id="saveRoundBtn">Save Round</button>
+      <button class="btn btn-text" id="cancelRoundBtn">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ VOICE STAGE MODAL ═══ -->
+<div class="modal-overlay" id="voiceModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">🎤 Voice Simulation</div>
+    <p style="font-size:13px;color:var(--md-on-surface-variant);margin-bottom:16px">Select the interview stage to practice:</p>
+    <div class="stage-pills" id="stagePills">
+      <button class="stage-pill" data-stage="phone">📞 Phone Screen</button>
+      <button class="stage-pill" data-stage="hr">👥 HR / Culture</button>
+      <button class="stage-pill" data-stage="technical">💻 Technical</button>
+      <button class="stage-pill" data-stage="manager">🎯 Hiring Manager</button>
+      <button class="stage-pill" data-stage="executive">🏢 Executive</button>
+      <button class="stage-pill" data-stage="final">🏆 Final Round</button>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-primary" id="startVoiceBtn" disabled>Start Practice</button>
+      <button class="btn btn-text" id="cancelVoiceBtn">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SETTINGS MODAL ═══ -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">⚙️ Settings</div>
+    <div class="settings-section">
+      <div class="settings-label">Anthropic API Key</div>
+      <input type="password" class="settings-input" id="apiKeyInput" placeholder="sk-ant-…">
+      <div style="font-size:12px;color:var(--md-on-surface-variant);margin-top:6px">Stored locally in your browser. Never sent anywhere except api.anthropic.com.</div>
+    </div>
+    <div class="settings-section">
+      <div class="settings-label">Your Profile (for AI context)</div>
+      <textarea class="url-textarea" id="profileInput" style="min-height:120px" placeholder="Paste your profile or resume text…"></textarea>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <button class="btn btn-primary" id="saveSettingsBtn">Save</button>
+      <button class="btn btn-text" id="cancelSettingsBtn">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ AI OUTPUT FULLSCREEN ═══ -->
+<div class="ai-modal-overlay" id="aiModal">
+  <div class="ai-modal-header">
+    <button class="icon-btn" id="aiModalClose">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+    </button>
+    <div class="ai-modal-title" id="aiModalTitle">AI Output</div>
+    <div id="aiModalSpinner" class="spinner" style="display:none"></div>
+  </div>
+  <div class="ai-modal-body" id="aiModalBody"></div>
+  <div class="ai-modal-actions">
+    <button class="btn btn-tonal" id="copyAiBtn">📋 Copy</button>
+    <button class="btn btn-text" id="closeAiBtn">Done</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// CONSTANTS & CONFIG
+// ═══════════════════════════════════════════════
+const HAIKU = 'claude-haiku-4-5-20251001';
+const SONNET = 'claude-sonnet-4-6';
+const OPUS = 'claude-opus-4-6';
+const STATUSES = ['saved','applied','interview','offer','rejected'];
+const STATUS_EMOJI = {saved:'💾',applied:'📤',interview:'🎙️',offer:'🎉',rejected:'❌'};
+
+// ═══════════════════════════════════════════════
+// STORE — localStorage persistence
+// ═══════════════════════════════════════════════
+const Store = {
+  _get(key, def) {
+    try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : def; }
+    catch { return def; }
+  },
+  _set(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch {} },
+
+  get settings()     { return this._get('jf_settings', { apiKey: '', darkMode: true, profile: '' }); },
+  set settings(v)    { this._set('jf_settings', v); },
+
+  getJobState(id)    { const all = this._get('jf_states', {}); return all[id] || { status: 'saved', notes: '', rounds: [] }; },
+  setJobState(id, s) {
+    const all = this._get('jf_states', {});
+    all[id] = { ...(all[id] || { status:'saved', notes:'', rounds:[] }), ...s };
+    this._set('jf_states', all);
+  },
+
+  getManualJobs()   { return this._get('jf_manual', []); },
+  addManualJob(job) { const j = this.getManualJobs(); j.unshift(job); this._set('jf_manual', j); },
+};
+
+// ═══════════════════════════════════════════════
+// CLAUDE API
+// ═══════════════════════════════════════════════
+async function callClaude(messages, { model = HAIKU, system = '', maxTokens = 2048 } = {}) {
+  const key = Store.settings.apiKey;
+  if (!key) { showSettingsModal('Add your Anthropic API key to use AI features.'); return null; }
+  const body = { model, max_tokens: maxTokens, messages };
+  if (system) body.system = system;
+  const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': key,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true',
+    },
+    body: JSON.stringify(body),
+  });
+  if (!resp.ok) {
+    const err = await resp.text().catch(() => resp.status);
+    throw new Error(`API ${resp.status}: ${err}`);
+  }
+  const data = await resp.json();
+  return data.content?.[0]?.text || '';
+}
+
+async function* streamClaude(messages, { model = SONNET, system = '', maxTokens = 3000 } = {}) {
+  const key = Store.settings.apiKey;
+  if (!key) { showSettingsModal(); return; }
+  const body = { model, max_tokens: maxTokens, stream: true, messages };
+  if (system) body.system = system;
+  const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': key,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true',
+    },
+    body: JSON.stringify(body),
+  });
+  if (!resp.ok) throw new Error(`API ${resp.status}`);
+  const reader = resp.body.getReader();
+  const dec = new TextDecoder();
+  let buf = '';
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buf += dec.decode(value, { stream: true });
+    const lines = buf.split('\n');
+    buf = lines.pop() || '';
+    for (const line of lines) {
+      if (!line.startsWith('data: ')) continue;
+      const d = line.slice(6);
+      if (d === '[DONE]') return;
+      try {
+        const evt = JSON.parse(d);
+        if (evt.type === 'content_block_delta' && evt.delta?.text) yield evt.delta.text;
+      } catch {}
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════
+// DATA LOADING
+// ═══════════════════════════════════════════════
+let allJobs = [];
+let filteredJobs = [];
+
+async function loadJobs() {
+  let serverJobs = [];
+  try {
+    const r = await fetch(`./scored_jobs.json?t=${Date.now()}`);
+    if (r.ok) serverJobs = await r.json();
+  } catch (e) { console.warn('Could not load scored_jobs.json', e); }
+  const manual = Store.getManualJobs();
+  // Dedup manual vs server by URL
+  const serverUrls = new Set(serverJobs.map(j => j.url).filter(Boolean));
+  const dedupedManual = manual.filter(j => !j.url || !serverUrls.has(j.url));
+  allJobs = [...serverJobs, ...dedupedManual];
+  return allJobs;
+}
+
+// ═══════════════════════════════════════════════
+// SCORE DISPLAY
+// ═══════════════════════════════════════════════
+function scoreClass(s) {
+  if (s >= 8) return 'score-high';
+  if (s >= 6) return 'score-mid';
+  if (s >= 4) return 'score-low';
+  return 'score-bad';
+}
+
+function isRemote(loc = '') {
+  return /remote|worldwide|anywhere|distributed/i.test(loc);
+}
+
+// ═══════════════════════════════════════════════
+// RENDER JOBS
+// ═══════════════════════════════════════════════
+function renderJobs(jobs) {
+  const container = document.getElementById('jobsList');
+  if (!jobs.length) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">🔍</div>
+        <h3>No jobs found</h3>
+        <p>Run the pipeline to fetch jobs, or add one manually using the + button.</p>
+      </div>`;
+    return;
+  }
+  container.innerHTML = jobs.map(job => renderJobCard(job)).join('');
+  // Attach listeners
+  jobs.forEach(job => attachCardListeners(job));
+}
+
+function renderJobCard(job) {
+  const state = Store.getJobState(job.id);
+  const score = job.fit_score ?? '?';
+  const sc = scoreClass(score);
+  const remote = isRemote(job.location || '');
+  const statusBtns = STATUSES.map(s =>
+    `<button class="status-btn ${s}${state.status === s ? ' active-status' : ''}"
+       data-id="${job.id}" data-status="${s}">${STATUS_EMOJI[s]} ${s}</button>`
+  ).join('');
+  const rounds = (state.rounds || []).map((r, i) =>
+    `<div class="round-chip">
+       <span class="round-stage">${r.stage}</span>
+       ${r.interviewer ? `<span style="color:var(--md-on-surface-variant);font-size:12px">${r.interviewer}</span>` : ''}
+       ${r.date ? `<span style="color:var(--md-on-surface-variant);font-size:12px">${r.date}</span>` : ''}
+       <span class="round-outcome ${r.outcome || 'pending'}">${r.outcome || 'pending'}</span>
+     </div>`
+  ).join('');
+  const source = job.source === 'manual' ? 'manual' : (job.source?.startsWith('ats') ? 'ATS' : null);
+  const daysAgo = job.posted ? Math.floor((Date.now() - new Date(job.posted)) / 86400000) : null;
+
+  return `
+<div class="job-card" id="card-${job.id}">
+  <div class="card-header" data-expand="${job.id}">
+    <div class="card-score ${sc}">${score}</div>
+    <div class="card-info">
+      <div class="card-company">${esc(job.company || '')}</div>
+      <div class="card-title">${esc(job.title || '')}</div>
+      <div class="card-meta">
+        ${job.location ? `<span class="meta-chip${remote ? ' remote' : ''}">${remote ? '🌍 ' : '📍 '}${esc(job.location)}</span>` : ''}
+        ${daysAgo !== null ? `<span class="meta-chip">${daysAgo === 0 ? 'today' : daysAgo + 'd ago'}</span>` : ''}
+        ${source ? `<span class="meta-chip source">${source}</span>` : ''}
+      </div>
+    </div>
+  </div>
+
+  <div class="status-row">
+    ${statusBtns}
+    ${job.url ? `<a href="${esc(job.url)}" target="_blank" rel="noopener" class="card-link" onclick="event.stopPropagation()">Apply ↗</a>` : ''}
+  </div>
+
+  <div class="card-body" id="body-${job.id}">
+    ${job.score_reason ? `<div class="score-reason">💡 ${esc(job.score_reason)}</div>` : ''}
+    ${job.description ? `<div class="card-description">${esc(job.description)}</div>` : ''}
+
+    <div class="ai-actions">
+      <button class="ai-btn" data-ai="cover" data-id="${job.id}"><span class="ai-icon">✉️</span>Cover Letter</button>
+      <button class="ai-btn" data-ai="prep" data-id="${job.id}"><span class="ai-icon">🎯</span>Interview Prep</button>
+      <button class="ai-btn" data-ai="voice" data-id="${job.id}"><span class="ai-icon">🎤</span>Voice Sim</button>
+      <button class="ai-btn" data-ai="dossier" data-id="${job.id}"><span class="ai-icon">🏢</span>Dossier</button>
+      <button class="ai-btn" data-ai="cv" data-id="${job.id}"><span class="ai-icon">📄</span>CV Tailoring</button>
+      <button class="ai-btn" data-ai="support" data-id="${job.id}"><span class="ai-icon">💙</span>Support</button>
+    </div>
+
+    ${rounds ? `
+    <div class="rounds-section">
+      <div class="rounds-title">
+        Interview Rounds
+        <button class="add-round-btn" data-add-round="${job.id}">+ Add</button>
+      </div>
+      ${rounds}
+    </div>` : `
+    <div class="rounds-section">
+      <div class="rounds-title">
+        Interview Rounds
+        <button class="add-round-btn" data-add-round="${job.id}">+ Add</button>
+      </div>
+    </div>`}
+
+    <div class="notes-section">
+      <div class="notes-label">Notes</div>
+      <textarea class="notes-input" data-notes="${job.id}" placeholder="Add notes…">${esc(state.notes || '')}</textarea>
+    </div>
+  </div>
+</div>`;
+}
+
+function attachCardListeners(job) {
+  // Expand/collapse
+  const header = document.querySelector(`[data-expand="${job.id}"]`);
+  const body = document.getElementById(`body-${job.id}`);
+  if (header && body) {
+    header.addEventListener('click', () => body.classList.toggle('open'));
+  }
+  // Status buttons
+  document.querySelectorAll(`[data-id="${job.id}"][data-status]`).forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const status = btn.dataset.status;
+      Store.setJobState(job.id, { status });
+      // Update UI
+      document.querySelectorAll(`[data-id="${job.id}"][data-status]`).forEach(b => {
+        b.classList.toggle('active-status', b.dataset.status === status);
+      });
+      showToast(`${STATUS_EMOJI[status]} Marked as ${status}`);
+    });
+  });
+  // AI buttons
+  document.querySelectorAll(`[data-ai][data-id="${job.id}"]`).forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      handleAiButton(btn.dataset.ai, job);
+    });
+  });
+  // Add round
+  const addRoundBtn = document.querySelector(`[data-add-round="${job.id}"]`);
+  if (addRoundBtn) {
+    addRoundBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      openRoundModal(job.id);
+    });
+  }
+  // Notes auto-save
+  const notesEl = document.querySelector(`[data-notes="${job.id}"]`);
+  if (notesEl) {
+    let nt;
+    notesEl.addEventListener('input', () => {
+      clearTimeout(nt);
+      nt = setTimeout(() => {
+        Store.setJobState(job.id, { notes: notesEl.value });
+      }, 800);
+    });
+  }
+}
+
+// ═══════════════════════════════════════════════
+// FILTERING & SEARCH
+// ═══════════════════════════════════════════════
+let activeFilter = 'all';
+let searchQuery = '';
+
+function applyFilters() {
+  filteredJobs = allJobs.filter(job => {
+    const state = Store.getJobState(job.id);
+    const status = state.status;
+    // Filter
+    if (activeFilter === 'saved' && status !== 'saved') return false;
+    if (activeFilter === 'applied' && status !== 'applied') return false;
+    if (activeFilter === 'interview' && status !== 'interview') return false;
+    if (activeFilter === 'offer' && status !== 'offer') return false;
+    if (activeFilter === 'rejected' && status !== 'rejected') return false;
+    if (activeFilter === 'score8' && (job.fit_score || 0) < 8) return false;
+    if (activeFilter === 'remote' && !isRemote(job.location || '')) return false;
+    // Search
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      const hay = `${job.company} ${job.title} ${job.location} ${job.description}`.toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+  renderJobs(filteredJobs);
+}
+
+// ═══════════════════════════════════════════════
+// AI FEATURE HANDLERS
+// ═══════════════════════════════════════════════
+const PROFILE_SUMMARY = `Yotam Kadishay — Director of Engineering at Wix (25-person platform org, 4 teams).
+Previously VP R&D at aiOla (built team 20→40, doubled ARR $4M→$8M), VP Engineering at BeyondMinds, Director at Guesty, EM at WeWork.
+15+ years experience, deep expertise in AI/GenAI (Claude, agents, RAG, agentic workflows), infrastructure (AWS/GCP/K8S), and scaling engineering organizations.
+Strong track record in startup/scale-up environments, cost optimization, and technical leadership.`;
+
+function getProfile() {
+  const stored = Store.settings.profile;
+  return stored || PROFILE_SUMMARY;
+}
+
+async function handleAiButton(type, job) {
+  if (type === 'voice') { openVoiceModal(job); return; }
+
+  const title = {
+    cover: '✉️ Cover Letter',
+    prep: '🎯 Interview Prep',
+    dossier: '🏢 Company Dossier',
+    cv: '📄 CV Tailoring',
+    support: '💙 Emotional Support',
+  }[type];
+
+  const prompts = {
+    cover: {
+      system: `You are an expert career coach helping a senior engineering leader write tailored cover letters.
+Write in first person, concise, confident, and specific. Focus on impact, leadership, and AI/infrastructure expertise.`,
+      user: `Write a compelling cover letter for this job application.
+
+## Candidate Profile
+${getProfile()}
+
+## Job
+Company: ${job.company}
+Title: ${job.title}
+Location: ${job.location}
+Description: ${job.description || '(not available)'}
+${job.ai_opener ? `\nOpening hook suggestion: ${job.ai_opener}` : ''}
+
+Format: 3 paragraphs. Opening hook → why this role/company is exciting + relevant experience → call to action.
+Keep it under 250 words. Be specific, not generic.`,
+      model: SONNET,
+    },
+    prep: {
+      system: `You are an expert interview coach for senior engineering leaders.
+Generate targeted, realistic interview preparation that helps candidates tell compelling stories.`,
+      user: `Create comprehensive interview preparation for this Engineering Manager/Director role.
+
+## Candidate Profile
+${getProfile()}
+
+## Job
+Company: ${job.company}
+Title: ${job.title}
+Description: ${job.description || '(not available)'}
+
+Generate:
+## 8 Likely Interview Questions
+For each question, provide:
+- The question
+- Key talking points (2-3 bullet points)
+- A specific example Yotam could use from his background
+
+## 5 Questions to Ask the Interviewer
+Smart, strategic questions that show depth and leadership thinking.
+
+## Key Themes to Emphasize
+3-4 themes that match this specific role.`,
+      model: SONNET,
+      maxTokens: 3000,
+    },
+    dossier: {
+      system: `You are a strategic business analyst. Create concise, actionable company dossiers for job candidates.`,
+      user: `Create a company dossier for ${job.company} to help a senior engineering candidate prepare.
+
+Based on what you know about ${job.company}:
+
+## Company Overview
+Business model, product, market position
+
+## Engineering Organization
+Known tech stack, engineering culture, scale, notable challenges
+
+## Recent News & Context
+Funding, growth, leadership changes, product launches (based on training knowledge)
+
+## Culture & Values
+What's known about their engineering culture and values
+
+## Smart Questions to Ask
+5 strategic questions specific to ${job.company} that show deep research
+
+## Potential Red Flags to Investigate
+Things to probe during interviews
+
+## Why This Could Be a Great Fit
+For a Director/VP-level AI + infrastructure leader
+
+Note: Based on general knowledge. Verify all details during interview process.`,
+      model: SONNET,
+    },
+    cv: {
+      system: `You are an expert resume consultant for senior engineering leaders.
+Provide specific, actionable advice on tailoring resumes for specific roles.`,
+      user: `Advise on how to tailor Yotam's resume for this specific role.
+
+## Candidate Profile
+${getProfile()}
+
+## Target Job
+Company: ${job.company}
+Title: ${job.title}
+Description: ${job.description || '(not available)'}
+
+Provide:
+## Keywords to Emphasize
+Terms from this job description that should appear prominently in the resume
+
+## Experiences to Lead With
+Which parts of Yotam's background to feature most prominently
+
+## Experiences to Minimize
+What's less relevant for this specific role
+
+## Opening Summary Rewrite
+A tailored 3-sentence resume summary for this specific application
+
+## Metrics to Highlight
+Which specific achievements and numbers are most impressive for this role`,
+      model: SONNET,
+    },
+    support: {
+      system: `You are Maya, a compassionate career coach and mental wellness guide specializing in supporting senior tech leaders through job searches.
+You are empathetic, practical, and grounding. You understand the unique pressures of senior engineering leadership job searches — identity tied to role, high visibility, imposter syndrome, and the emotional rollercoaster of rejections and waiting.
+Keep responses warm, specific, and actionable. Avoid toxic positivity.`,
+      user: `Provide contextual emotional support and career coaching for this specific situation.
+
+## About the Candidate
+${getProfile()}
+
+## Current Job Application
+Company: ${job.company}
+Title: ${job.title}
+Current Status: ${Store.getJobState(job.id).status}
+${Store.getJobState(job.id).rounds?.length ? `Interview stages completed: ${Store.getJobState(job.id).rounds.map(r => r.stage).join(', ')}` : ''}
+
+Provide:
+1. Validation of where they are in the process
+2. Specific, grounded perspective on this company/role
+3. Practical next steps or mindset shifts
+4. An encouraging but realistic closing note
+
+Be conversational and human, not corporate.`,
+      model: SONNET,
+    },
+  };
+
+  const cfg = prompts[type];
+  if (!cfg) return;
+
+  showAiModal(title, job);
+  try {
+    const el = document.getElementById('aiModalBody');
+    el.textContent = '';
+    document.getElementById('aiModalSpinner').style.display = 'flex';
+    let fullText = '';
+    for await (const chunk of streamClaude(
+      [{ role: 'user', content: cfg.user }],
+      { model: cfg.model || SONNET, system: cfg.system, maxTokens: cfg.maxTokens || 2500 }
+    )) {
+      fullText += chunk;
+      el.textContent = fullText;
+    }
+    document.getElementById('aiModalSpinner').style.display = 'none';
+  } catch (e) {
+    document.getElementById('aiModalSpinner').style.display = 'none';
+    document.getElementById('aiModalBody').textContent = `Error: ${e.message}`;
+    showToast('AI error: ' + e.message);
+  }
+}
+
+async function handleVoiceSimulation(job, stage) {
+  const stageNames = {
+    phone: 'Phone Screen',
+    hr: 'HR / Culture Fit',
+    technical: 'Technical Interview',
+    manager: 'Hiring Manager',
+    executive: 'Executive / VP',
+    final: 'Final Round',
+  };
+  const stageName = stageNames[stage] || stage;
+  const stageContext = {
+    phone: 'Brief 20-30 min call with a recruiter or coordinator. Focus: quick background, mutual interest, logistics, salary expectations.',
+    hr: '45-60 min with HR or People team. Focus: culture fit, behavioral questions, values alignment, team dynamics.',
+    technical: '60-90 min technical discussion. Focus: system design, architecture decisions, past technical challenges, hands-on experience.',
+    manager: '60 min with hiring manager (often CTO/VP Eng). Focus: leadership philosophy, team management, strategic thinking, org design.',
+    executive: '30-60 min with CEO, CTO, or board. Focus: vision alignment, company-level impact, leadership at scale, business acumen.',
+    final: 'Final validation round. May include team members, cross-functional stakeholders. Focus: team fit, specific scenarios, final questions.',
+  };
+
+  showAiModal(`🎤 Voice Sim: ${stageName} at ${job.company}`, job);
+  document.getElementById('aiModalSpinner').style.display = 'flex';
+  document.getElementById('aiModalBody').textContent = '';
+
+  const user = `Create a realistic voice simulation script for this interview stage.
+
+## Candidate
+${getProfile()}
+
+## Interview Details
+Company: ${job.company}
+Role: ${job.title}
+Stage: ${stageName}
+Stage Context: ${stageContext[stage]}
+Job Description: ${job.description || '(not available)'}
+
+Generate a realistic mock interview transcript with:
+
+## OPENING (Interviewer sets the stage)
+Brief interviewer intro + first question
+
+## 6 LIKELY QUESTIONS + IDEAL ANSWERS
+Format each as:
+**Interviewer:** [Question]
+**Yotam:** [Suggested response — specific, uses real examples from his background, 2-4 sentences]
+**Why this works:** [1 line coaching tip]
+
+## TRANSITION MOMENTS
+2 moments where Yotam should pivot or redirect the conversation
+
+## QUESTIONS TO ASK
+3 stage-appropriate questions Yotam should ask
+
+## WATCH OUT FOR
+2 potential pitfalls specific to this stage
+
+Make it feel like a real conversation, not a list.`;
+
+  try {
+    const el = document.getElementById('aiModalBody');
+    let fullText = '';
+    for await (const chunk of streamClaude(
+      [{ role: 'user', content: user }],
+      { model: SONNET, system: 'You are an elite executive interview coach with 20 years of experience preparing senior engineering leaders for high-stakes interviews. Create realistic, specific, and immediately actionable practice scripts.', maxTokens: 3500 }
+    )) {
+      fullText += chunk;
+      el.textContent = fullText;
+    }
+    document.getElementById('aiModalSpinner').style.display = 'none';
+  } catch (e) {
+    document.getElementById('aiModalSpinner').style.display = 'none';
+    document.getElementById('aiModalBody').textContent = `Error: ${e.message}`;
+  }
+}
+
+// ═══════════════════════════════════════════════
+// MODAL MANAGEMENT
+// ═══════════════════════════════════════════════
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+  document.body.style.overflow = '';
+}
+function closeAllModals() {
+  document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+  document.body.style.overflow = '';
+}
+
+let currentVoiceJob = null;
+let selectedStage = null;
+
+function openVoiceModal(job) {
+  currentVoiceJob = job;
+  selectedStage = null;
+  document.querySelectorAll('.stage-pill').forEach(p => p.classList.remove('selected'));
+  document.getElementById('startVoiceBtn').disabled = true;
+  openModal('voiceModal');
+}
+
+let currentRoundJobId = null;
+
+function openRoundModal(jobId) {
+  currentRoundJobId = jobId;
+  document.getElementById('roundDate').valueAsDate = new Date();
+  document.getElementById('roundInterviewer').value = '';
+  document.getElementById('roundOutcome').value = 'pending';
+  openModal('roundModal');
+}
+
+function showAiModal(title, job) {
+  document.getElementById('aiModalTitle').textContent = title;
+  document.getElementById('aiModalBody').textContent = '';
+  document.getElementById('aiModalSpinner').style.display = 'none';
+  document.getElementById('aiModal').classList.add('open');
+}
+
+function closeAiModal() {
+  document.getElementById('aiModal').classList.remove('open');
+}
+
+function showSettingsModal(hint) {
+  const inp = document.getElementById('apiKeyInput');
+  inp.value = Store.settings.apiKey || '';
+  document.getElementById('profileInput').value = Store.settings.profile || '';
+  openModal('settingsModal');
+  if (hint) { inp.placeholder = hint; inp.focus(); }
+}
+
+// ═══════════════════════════════════════════════
+// ADD JOB
+// ═══════════════════════════════════════════════
+async function extractJobDetails() {
+  const url = document.getElementById('addJobUrl').value.trim();
+  const desc = document.getElementById('addJobDesc').value.trim();
+  if (!url && !desc) { showToast('Paste a URL or job description'); return; }
+
+  const btn = document.getElementById('addJobExtractBtn');
+  btn.innerHTML = '<div class="spinner"></div> Extracting…';
+  btn.disabled = true;
+
+  try {
+    const text = await callClaude([{
+      role: 'user',
+      content: `Extract job details from this information and return JSON only.
+
+URL: ${url || 'not provided'}
+Description: ${desc || 'not provided'}
+
+Return: {"company":"...","title":"...","location":"...","posted":"YYYY-MM-DD","description":"2-3 sentence summary"}
+If a field is unknown, use reasonable defaults. For posted, use today if unknown.`
+    }], { model: HAIKU, maxTokens: 512 });
+
+    const m = text?.match(/\{[\s\S]*\}/);
+    if (!m) throw new Error('Could not parse response');
+    const d = JSON.parse(m[0]);
+
+    document.getElementById('addJobCompany').value = d.company || '';
+    document.getElementById('addJobTitle').value = d.title || '';
+    document.getElementById('addJobLocation').value = d.location || '';
+    document.getElementById('addJobPosted').value = d.posted || new Date().toISOString().slice(0,10);
+    document.getElementById('addJobDesc').value = d.description || desc;
+    document.getElementById('addJobPreview').style.display = 'block';
+    document.getElementById('addJobSaveBtn').style.display = 'flex';
+  } catch (e) {
+    showToast('Extraction failed: ' + e.message);
+    // Show manual form anyway
+    document.getElementById('addJobPreview').style.display = 'block';
+    document.getElementById('addJobPosted').value = new Date().toISOString().slice(0,10);
+  } finally {
+    btn.innerHTML = '<span>✨ Re-extract</span>';
+    btn.disabled = false;
+  }
+}
+
+function saveManualJob() {
+  const company = document.getElementById('addJobCompany').value.trim();
+  const title = document.getElementById('addJobTitle').value.trim();
+  if (!company || !title) { showToast('Company and title are required'); return; }
+  const job = {
+    id: crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36),
+    company,
+    title,
+    location: document.getElementById('addJobLocation').value.trim(),
+    url: document.getElementById('addJobUrl').value.trim(),
+    posted: document.getElementById('addJobPosted').value,
+    description: document.getElementById('addJobDesc').value.trim(),
+    fit_score: null,
+    score_reason: 'Manually added',
+    ai_opener: '',
+    location_ok: true,
+    source: 'manual',
+    initial_status: 'saved',
+    scraped_at: new Date().toISOString(),
+  };
+  Store.addManualJob(job);
+  closeModal('addJobModal');
+  showToast('Job added!');
+  refresh();
+}
+
+// ═══════════════════════════════════════════════
+// ANALYTICS
+// ═══════════════════════════════════════════════
+let scoreChartInstance = null;
+let statusChartInstance = null;
+
+function renderAnalytics() {
+  const states = allJobs.map(j => ({ ...j, state: Store.getJobState(j.id) }));
+  const byStatus = {};
+  STATUSES.forEach(s => { byStatus[s] = states.filter(j => j.state.status === s).length; });
+  const total = allJobs.length;
+
+  // Stats grid
+  const avgScore = allJobs.length
+    ? (allJobs.filter(j => j.fit_score).reduce((s, j) => s + j.fit_score, 0) / allJobs.filter(j => j.fit_score).length).toFixed(1)
+    : '—';
+  document.getElementById('statsGrid').innerHTML = `
+    <div class="stat-card"><div class="stat-value">${total}</div><div class="stat-label">Total Jobs</div></div>
+    <div class="stat-card"><div class="stat-value">${byStatus.applied + byStatus.interview + byStatus.offer}</div><div class="stat-label">Active Pipeline</div></div>
+    <div class="stat-card"><div class="stat-value">${byStatus.interview}</div><div class="stat-label">Interviewing</div></div>
+    <div class="stat-card"><div class="stat-value">${avgScore}</div><div class="stat-label">Avg Fit Score</div></div>
+  `;
+
+  // Funnel
+  const funnelStages = [
+    { label: 'Saved', count: byStatus.saved, color: '#7986CB' },
+    { label: 'Applied', count: byStatus.applied, color: '#9C27B0' },
+    { label: 'Interview', count: byStatus.interview, color: '#FFA726' },
+    { label: 'Offer', count: byStatus.offer, color: '#4CAF50' },
+  ];
+  const maxCount = Math.max(...funnelStages.map(s => s.count), 1);
+  document.getElementById('funnelChart').innerHTML = funnelStages.map(s => `
+    <div class="funnel-bar">
+      <div class="funnel-label">
+        <span>${s.label}</span>
+        <span>${s.count}${s.count && funnelStages[0].count ? ` (${Math.round(s.count/funnelStages[0].count*100)}%)` : ''}</span>
+      </div>
+      <div class="funnel-track">
+        <div class="funnel-fill" style="width:${Math.round(s.count/maxCount*100)}%;background:${s.color}">
+          ${s.count > 0 ? s.count : ''}
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  // Score distribution chart
+  const scoreBuckets = Array(10).fill(0);
+  allJobs.forEach(j => { if (j.fit_score >= 1 && j.fit_score <= 10) scoreBuckets[j.fit_score - 1]++; });
+  const scoreCtx = document.getElementById('scoreChart').getContext('2d');
+  if (scoreChartInstance) scoreChartInstance.destroy();
+  scoreChartInstance = new Chart(scoreCtx, {
+    type: 'bar',
+    data: {
+      labels: ['1','2','3','4','5','6','7','8','9','10'],
+      datasets: [{
+        data: scoreBuckets,
+        backgroundColor: scoreBuckets.map((_, i) =>
+          i >= 7 ? '#4CAF50' : i >= 5 ? '#2196F3' : i >= 3 ? '#FFA726' : '#EF5350'
+        ),
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true, ticks: { color: 'var(--md-on-surface-variant)', stepSize: 1 }, grid: { color: 'var(--md-outline-variant)' } },
+        x: { ticks: { color: 'var(--md-on-surface-variant)' }, grid: { display: false } }
+      }
+    }
+  });
+
+  // Status pie chart
+  const statusCtx = document.getElementById('statusChart').getContext('2d');
+  if (statusChartInstance) statusChartInstance.destroy();
+  const statusColors = { saved:'#7986CB', applied:'#9C27B0', interview:'#FFA726', offer:'#4CAF50', rejected:'#EF5350' };
+  const statusData = STATUSES.filter(s => byStatus[s] > 0);
+  statusChartInstance = new Chart(statusCtx, {
+    type: 'doughnut',
+    data: {
+      labels: statusData.map(s => s.charAt(0).toUpperCase() + s.slice(1)),
+      datasets: [{
+        data: statusData.map(s => byStatus[s]),
+        backgroundColor: statusData.map(s => statusColors[s]),
+        borderWidth: 0,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      plugins: {
+        legend: { position: 'right', labels: { color: 'var(--md-on-surface)', font: { size: 13 } } }
+      }
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════
+// SUPPORT CHAT
+// ═══════════════════════════════════════════════
+const chatHistory = [
+  { role: 'assistant', content: "Hi! I'm Maya, your personal career coach. I'm here to support you through every stage of your job search — the highs, the rejections, the waiting, and the wins.\n\nHow are you feeling today?" }
+];
+
+const MAYA_SYSTEM = `You are Maya, a warm and empathetic career coach and mental wellness guide specializing in supporting senior tech leaders through their job search journey.
+
+About the candidate you're supporting:
+${PROFILE_SUMMARY}
+
+Your approach:
+- Genuinely empathetic and validating, never dismissive or clichéd
+- Practically grounded — you balance emotional support with tactical career advice
+- Aware that senior engineering leaders often struggle with identity tied to their role, imposter syndrome despite strong track records, and the unique pressure of high-visibility searches
+- You know rejection is part of the process but never trivialize it
+- You ask follow-up questions to understand the specific situation
+- Keep responses conversational, warm, and appropriately concise (2-4 paragraphs max)
+- Avoid toxic positivity ("everything will be great!") — be honest and grounding
+- Reference the candidate's specific background when relevant to make support feel personal`;
+
+async function sendChatMessage() {
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+
+  input.value = '';
+  input.style.height = '';
+
+  appendChatMessage('user', msg);
+  chatHistory.push({ role: 'user', content: msg });
+
+  const typingId = appendChatMessage('assistant', '…', true);
+  document.getElementById('sendBtn').disabled = true;
+
+  try {
+    const messages = chatHistory.map(m => ({ role: m.role, content: m.content }));
+    const el = document.getElementById(`msg-${typingId}`);
+    let fullText = '';
+    el.textContent = '';
+
+    for await (const chunk of streamClaude(messages, { model: SONNET, system: MAYA_SYSTEM, maxTokens: 800 })) {
+      fullText += chunk;
+      el.textContent = fullText;
+      scrollChatToBottom();
+    }
+    chatHistory.push({ role: 'assistant', content: fullText });
+  } catch (e) {
+    const el = document.getElementById(`msg-${typingId}`);
+    if (el) el.textContent = `I'm having trouble connecting right now. Please check your API key in settings.`;
+  } finally {
+    document.getElementById('sendBtn').disabled = false;
+  }
+}
+
+let msgCounter = 0;
+function appendChatMessage(role, text, isTyping = false) {
+  const id = ++msgCounter;
+  const div = document.createElement('div');
+  div.className = `message ${role}${isTyping ? ' typing' : ''}`;
+  div.id = `msg-${id}`;
+  div.textContent = text;
+  document.getElementById('chatMessages').appendChild(div);
+  scrollChatToBottom();
+  return id;
+}
+
+function scrollChatToBottom() {
+  const el = document.getElementById('chatMessages');
+  el.scrollTop = el.scrollHeight;
+}
+
+// ═══════════════════════════════════════════════
+// UTILITIES
+// ═══════════════════════════════════════════════
+function esc(str) {
+  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function showToast(msg, duration = 2500) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), duration);
+}
+
+async function refresh() {
+  const btn = document.getElementById('refreshBtn');
+  btn.style.animation = 'spin 0.7s linear infinite';
+  await loadJobs();
+  applyFilters();
+  btn.style.animation = '';
+  showToast('Jobs refreshed');
+}
+
+// ═══════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════
+function switchPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(`page-${page}`).classList.add('active');
+  document.querySelector(`[data-page="${page}"]`).classList.add('active');
+
+  const fab = document.getElementById('addJobFab');
+  fab.style.display = page === 'jobs' ? 'flex' : 'none';
+
+  if (page === 'analytics') renderAnalytics();
+}
+
+// ═══════════════════════════════════════════════
+// INIT & EVENT LISTENERS
+// ═══════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', async () => {
+  // Apply saved theme
+  const settings = Store.settings;
+  document.documentElement.dataset.theme = settings.darkMode !== false ? 'dark' : 'light';
+
+  // Load data
+  await loadJobs();
+  applyFilters();
+
+  // Navigation
+  document.querySelectorAll('.nav-item').forEach(btn => {
+    btn.addEventListener('click', () => switchPage(btn.dataset.page));
+  });
+
+  // Search
+  document.getElementById('searchInput').addEventListener('input', e => {
+    searchQuery = e.target.value.trim();
+    applyFilters();
+  });
+
+  // Filter chips
+  document.getElementById('filterRow').addEventListener('click', e => {
+    const chip = e.target.closest('.filter-chip');
+    if (!chip) return;
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    activeFilter = chip.dataset.filter;
+    applyFilters();
+  });
+
+  // Dark mode
+  document.getElementById('darkModeBtn').addEventListener('click', () => {
+    const s = Store.settings;
+    s.darkMode = !s.darkMode;
+    Store.settings = s;
+    document.documentElement.dataset.theme = s.darkMode ? 'dark' : 'light';
+  });
+
+  // Settings
+  document.getElementById('settingsBtn').addEventListener('click', () => showSettingsModal());
+  document.getElementById('saveSettingsBtn').addEventListener('click', () => {
+    const s = Store.settings;
+    s.apiKey = document.getElementById('apiKeyInput').value.trim();
+    s.profile = document.getElementById('profileInput').value.trim();
+    Store.settings = s;
+    closeModal('settingsModal');
+    showToast('Settings saved');
+  });
+  document.getElementById('cancelSettingsBtn').addEventListener('click', () => closeModal('settingsModal'));
+
+  // Refresh
+  document.getElementById('refreshBtn').addEventListener('click', refresh);
+
+  // Add Job FAB
+  document.getElementById('addJobFab').addEventListener('click', () => {
+    document.getElementById('addJobUrl').value = '';
+    document.getElementById('addJobDesc').value = '';
+    document.getElementById('addJobPreview').style.display = 'none';
+    document.getElementById('addJobSaveBtn').style.display = 'none';
+    openModal('addJobModal');
+  });
+  document.getElementById('addJobExtractBtn').addEventListener('click', extractJobDetails);
+  document.getElementById('addJobSaveBtn').addEventListener('click', saveManualJob);
+  document.getElementById('addJobCancelBtn').addEventListener('click', () => closeModal('addJobModal'));
+
+  // Round modal
+  document.getElementById('saveRoundBtn').addEventListener('click', () => {
+    if (!currentRoundJobId) return;
+    const round = {
+      stage: document.getElementById('roundStage').value,
+      date: document.getElementById('roundDate').value,
+      interviewer: document.getElementById('roundInterviewer').value.trim(),
+      outcome: document.getElementById('roundOutcome').value,
+    };
+    const state = Store.getJobState(currentRoundJobId);
+    const rounds = [...(state.rounds || []), round];
+    Store.setJobState(currentRoundJobId, { rounds, status: 'interview' });
+    closeModal('roundModal');
+    showToast('Interview round saved');
+    applyFilters();
+  });
+  document.getElementById('cancelRoundBtn').addEventListener('click', () => closeModal('roundModal'));
+
+  // Voice modal
+  document.getElementById('stagePills').addEventListener('click', e => {
+    const pill = e.target.closest('.stage-pill');
+    if (!pill) return;
+    document.querySelectorAll('.stage-pill').forEach(p => p.classList.remove('selected'));
+    pill.classList.add('selected');
+    selectedStage = pill.dataset.stage;
+    document.getElementById('startVoiceBtn').disabled = false;
+  });
+  document.getElementById('startVoiceBtn').addEventListener('click', () => {
+    if (!currentVoiceJob || !selectedStage) return;
+    closeModal('voiceModal');
+    handleVoiceSimulation(currentVoiceJob, selectedStage);
+  });
+  document.getElementById('cancelVoiceBtn').addEventListener('click', () => closeModal('voiceModal'));
+
+  // AI modal
+  document.getElementById('aiModalClose').addEventListener('click', closeAiModal);
+  document.getElementById('closeAiBtn').addEventListener('click', closeAiModal);
+  document.getElementById('copyAiBtn').addEventListener('click', () => {
+    const text = document.getElementById('aiModalBody').textContent;
+    navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard'));
+  });
+
+  // Chat
+  document.getElementById('sendBtn').addEventListener('click', sendChatMessage);
+  document.getElementById('chatInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChatMessage(); }
+  });
+  document.getElementById('chatInput').addEventListener('input', function() {
+    this.style.height = '';
+    this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+  });
+
+  // Close modals on backdrop click
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', e => {
+      if (e.target === overlay) closeModal(overlay.id);
+    });
+  });
+
+  // PWA service worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  }
+});
+</script>
+</body>
+</html>

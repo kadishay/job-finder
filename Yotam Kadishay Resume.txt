@@ -1,0 +1,70 @@
+
+YOTAM KADISHAY
+yotam.kadishay@gmail.com · +972-54-6306797 · Tel-Aviv
+
+
+E X P E R I E N C E
+
+Wix		     	    2024 - Present
+Director of Engineering 
+Leading a 25-person platform engineering organization across four teams. Owning core infrastructure, including storing and serving the source of truth for sites and applications metadata, and their lifecycle. Also, the public requests flow from routing, proxying, and caching responses. Additionally, leading the media infrastructure, which stores and delivers all Wix images and videos. Our systems are low-latency, high-availability critical production systems at Wix scale, supporting hundreds of millions of sites and billions of daily requests.
+Driving the execution of complex projects across the organization. Leading the adoption of AI engineering workflows, smart agents to improve production handling, and developer enablement practices to improve planning, accelerate delivery, and help teams focus on higher-impact work. Additionally, delivering major annualized cost savings through infrastructure modernization, cross-organization cleanups, and smarter lifecycle management.
+Hands-on leadership across AWS, GCP, Kubernetes, and Scala. Extensive usage of GenAI ecosystems, including Claude, Cursor, Codex, autonomous agents, agentic workflows, prompt engineering, context engineering, harness engineering, RAG architectures, workflow orchestration, and evaluation frameworks.
+aiOla		     	        2022 - 2024
+VP R&D
+Built and led a high-performing team of 40, separated into four departments. Directly managed the heads of engineering, data engineers, data scientists, and DevOps. Oversaw the research, architecture, execution, and streamlining of the delivery as one product. Scaled from a predominantly outsourced team of 20 to a strong-cultured in-house focused team of 40.   
+Created the groundbreaking flagship aiOla product from the ground up. Positioning aiOla as an AI trailblazer in a new market for transforming the human voice into action in day-to-day processes. Doubling the company's ARR from 4 to 8 million dollars. Developed and implemented cost-optimization strategies for cloud infrastructure, reducing cloud expenditures by 60%, from $80k to $30k, without compromising performance or scalability.
+Working with all major cloud providers (GCP, Azure, and AWS), utilizing diverse serverless cloud tools such as Lambda, AppSync, Step Functions, DynamoDB, SQS, SageMaker, CloudWatch, Lex, Transcribe, Amplify, Cognito, and EventBridge. Using cutting-edge data science tools, including Chat GPT, Weights & Biases, and Prodigy. Building a solid infrastructure with OpenTelemetry, Terraform, K8S, Docker, MiniKube, Helm, and KServe.
+BeyondMinds (ceased operations due to funding constraints) 		     	        2021 - 2022
+VP of Engineering
+Led the company's engineering organization, which included 30 engineers in three teams, a DevOps team, and architects. 
+Spearheaded the development of a cutting-edge MLOps platform to automate the deployment and scaling of AI/ML models. 
+Company management team member. Shaped business strategies, optimized processes, managed risks, developed go-to-market plans, and maintained solid client relations.
+Used cutting-edge MLOps tools, including ClearML, BentoML, and Seldon Core. Built a cloud-agnostic microservice architecture using Elasticsearch, MinIO, Redis, NodeJS, NestJS, and Python. With a strong infrastructure setup using Docker, K8S, Helm, Argo CD, GitHub actions, Terraform, Kibana, Grafana, and Prometheus.
+Guesty		     	        2019 - 2021
+Director of Engineering
+Led a group of 25 full-stack engineers in 5 teams, locally and globally. Directly managing and mentoring group managers (managers of managers), team leads, and technical leads.
+Created new product verticals, continually renewed the existing code base, and reduced legacy. 
+Defined and improved cross-R&D processes. Owning all execution phases, from planning to the client. Including design, implementation, project management, quality, user adoption, and production.
+Transitioned from a monolith architecture to microservices orchestration, using NodeJS, TypeScript, React, RabbitMQ, Stripe, PostgreSQL, and MongoDB over AWS.
+WeWork (R&D organization closed)		     	                   2019
+Engineering Manager 		     	          	    						
+
+Managed a group of full-stack developers as part of the Billing & Payments mission. Responsible for team building, hiring top talent, coaching engineers, leading project management and strategic planning, and working closely with many stakeholders worldwide. Led highly complex architectural design for WeWork's financial products.
+The technology stack includes Go, RabbitMQ, Ruby, React, and GraphQL, in an ecosystem transforming from a monolith to a Saga-pattern microservices environment using Docker and Kubernetes on AWS. 
+AppsFlyer		     	        2015 - 2019
+Development Team Lead
+
+Led a strategic, brand-new, massive-scale product from scratch, end-to-end, including product definitions, design, implementation, deployment, monitoring, and production resiliency. 
+Managing a global full-stack engineering team, leading the highly complex product design and its execution, meticulously hiring exceptional talents, and ensuring they are highly motivated and performing. Taking a significant part in engaging, onboarding, and maintaining customers. Built the team from the ground up and acted as a mentor and coach for the team members and other team leads across the organization.
+Worked in a microservices architecture with Node.js, GO, Kafka, Scala, Spark, ClickHouse, PostgreSQL, Apache Parquet, ReactJS, and Webpack. 
+SAP Labs		     	        2009 - 2015
+Development Team Lead 		     	          	    						 2013 - 2015
+
+Acted as a hands-on team lead and technical lead, managing a client-side team of 10 engineers. Working in a Scrum Agile methodology and practicing continuous integration (CI).  Responsible for hiring, mentoring, assuring performance, and motivating the team. Developed an innovative product with responsive UX across devices and deployment options, and took a crucial part in all project phases, from definition to implementation.
+Front End Developer											2009 - 2013
+
+Developing state-of-the-art web applications for desktops, tablets, and smartphones using object-oriented JavaScript, HTML5, CSS3, jQuery, jQuery Mobile, jQuery UI, LESS, and more. Working in a Scrum Agile methodology.
+
+E D U C A T I O N
+
+IDC Herzliya \ Reichman University - B.Sc. Computer Science			2007 - 2010
+		            
+V O L U N T E E R I N G
+
+Gvahim		              2019 - 2022
+Mentored skilled new immigrants and returning citizens, provided them with the tools to build a successful career in Israel, and supported them until each found their new role and beyond.
+HackerNoon		         	2018 - 2019
+Published technical articles on JavaScript and Node.js and managerial content on hiring and interviewing, reaching almost half a million readers worldwide.
+
+P A T E N T S
+
+Managing a Selection Mode for Presented Content ·  US Patent: 20140068509   
+Camera-Based Portal Content Security ·  US Patent: 20140198958 
+Portal Multi-Device Session Context Preservation ·  US Patent: 20140201377
+Providing Network-Applicable Content ·  US Patent: 20140222993 
+Smart Meeting Service ·  US Patent: 20150058425
+Software Unit Test Immunity Index · US Patent: 20150058675
+System and Methods to Automatically Suggest Elements for a Content Aggregation System · US Patent: 20150324358
+Providing Dynamic Overview Panel User Experience · US Patent: 20180276309
+- Please use with discretion -
