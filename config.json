@@ -29,7 +29,16 @@
     "axonius", "orca-security", "wiz", "aquasec", "aiola",
     "guesty", "trigo", "pagaya", "lemonade", "earnest",
     "bigpanda", "anodot", "lightricks", "solaredge", "orion-health",
-    "amdocs", "salesforce", "palo-alto-networks", "ibm"
+    "amdocs", "salesforce", "palo-alto-networks", "ibm",
+    "silverfort", "panaya", "intuit", "autodesk", "cyera",
+    "overwolf", "rubrik", "wsc-sports", "natural-intelligence",
+    "servicenow", "imperva", "akamai", "semperis", "remitly",
+    "innovid", "aidoc", "bigid", "etoro", "nice", "verint",
+    "coralogix", "optibus", "glassbox", "digital-turbine",
+    "checkpoint", "priority-software", "lsports",
+    "playtika", "sysaid", "altshare", "cato-networks",
+    "walkme", "nayax", "radware", "mend", "cybereason",
+    "sap", "hp-indigo"
   ],
 
   "comeet_companies": [
@@ -53,6 +62,12 @@
     "Director of Engineering OR Engineering Manager Amdocs Israel site:amdocs.com/careers OR site:linkedin.com/jobs",
     "Director of Engineering OR VP Engineering Salesforce Israel site:salesforce.com/careers OR site:linkedin.com/jobs",
     "Director of Engineering OR VP Engineering \"Palo Alto Networks\" Israel site:paloaltonetworks.com/company/careers OR site:linkedin.com/jobs",
-    "Director of Engineering OR VP Engineering IBM Israel site:ibm.com/careers OR site:linkedin.com/jobs"
+    "Director of Engineering OR VP Engineering IBM Israel site:ibm.com/careers OR site:linkedin.com/jobs",
+    "Director of Engineering OR Engineering Manager Intel Israel site:intel.com/content/www/us/en/jobs OR site:linkedin.com/jobs",
+    "Director of Engineering OR Engineering Manager Apple Israel site:jobs.apple.com OR site:linkedin.com/jobs",
+    "Director of Engineering OR Engineering Manager \"Check Point\" Israel site:careers.checkpoint.com OR site:linkedin.com/jobs",
+    "Director of Engineering OR Engineering Manager Dell Israel site:dell.com/en-us/dt/careers OR site:linkedin.com/jobs",
+    "Director of Engineering OR Engineering Manager eBay Israel site:jobs.ebayinc.com OR site:linkedin.com/jobs",
+    "Director of Engineering OR Engineering Manager \"Applied Materials\" Israel site:linkedin.com/jobs"
   ]
 }
