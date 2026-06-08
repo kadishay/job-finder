@@ -595,6 +595,23 @@
     "initial_status": "saved"
   },
   {
+    "id": "55d2fd80-577f-41a3-8cac-73875fcd58d3",
+    "company": "Datadog",
+    "title": "Director, Product Management - Core Platforms",
+    "location": "New York",
+    "url": "https://careers.datadoghq.com/detail/7583609/?gh_jid=7583609",
+    "posted": "2026-05-26",
+    "description": "&lt;p&gt;Datadog is seeking a &lt;strong&gt;Director of Product Management for Core Platforms&lt;/strong&gt; to lead the internal platforms that power our global engineering organization. This is an internal-first platform leadership role, focused on enabling Datadog engineers to build, scale, and operate products efficiently and reliably.&lt;/p&gt;\n&lt;p&gt;&lt;br&gt;You will lead a team of 15+ Product Managers, including both Individual Contributors and Group Product Managers, responsible for ",
+    "scraped_at": "2026-06-08T16:45:38Z",
+    "source": "ats_greenhouse",
+    "fit_score": 4,
+    "score_reason": "This is a Product Management director role, not an Engineering Leadership role. While Datadog is technically excellent and the platforms domain aligns with Yotam's infrastructure expertise, his career is built on engineering leadership and technical delivery, not product strategy. The role requires PM skills (roadmapping, GTM, stakeholder management) rather than his core strengths.",
+    "ai_opener": "While my infrastructure and platform engineering expertise aligns with Datadog's technical sophistication, I'm optimized for engineering leadership and technical strategy rather than product management.",
+    "location_ok": false,
+    "relocation_required": true,
+    "initial_status": "saved"
+  },
+  {
     "id": "db881ad4-8d85-4e90-ab92-a1f67ce13e12",
     "company": "Jfrog",
     "title": "Full Stack Engineering Manager",
