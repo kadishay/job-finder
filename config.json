@@ -43,6 +43,11 @@
     "Engineering Manager AI infrastructure Israel remote",
     "Head of Engineering Tel Aviv startup",
     "\"VP Engineering\" OR \"Director of Engineering\" Israel site:comeet.com",
-    "\"VP R&D\" OR \"VP of R&D\" Israel site:linkedin.com/jobs"
+    "\"VP R&D\" OR \"VP of R&D\" Israel site:linkedin.com/jobs",
+    "Director of Engineering OR Engineering Manager site:careers.google.com Israel OR remote",
+    "Director of Engineering OR Engineering Manager site:metacareers.com Israel OR remote",
+    "Director of Engineering OR Engineering Manager site:careers.microsoft.com Israel OR remote",
+    "Director of Engineering OR Engineering Manager site:amazon.jobs Israel OR remote",
+    "Director of Engineering OR Engineering Manager site:nvidia.com/en-us/about-nvidia/careers Israel OR remote"
   ]
 }
