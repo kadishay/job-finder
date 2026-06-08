@@ -28,7 +28,8 @@
     "ironsource", "appsflyer", "ironvest", "varonis", "armis",
     "axonius", "orca-security", "wiz", "aquasec", "aiola",
     "guesty", "trigo", "pagaya", "lemonade", "earnest",
-    "bigpanda", "anodot", "lightricks", "solaredge", "orion-health"
+    "bigpanda", "anodot", "lightricks", "solaredge", "orion-health",
+    "amdocs", "salesforce", "palo-alto-networks", "ibm"
   ],
 
   "comeet_companies": [
@@ -48,6 +49,10 @@
     "Director of Engineering OR Engineering Manager site:metacareers.com Israel OR remote",
     "Director of Engineering OR Engineering Manager site:careers.microsoft.com Israel OR remote",
     "Director of Engineering OR Engineering Manager site:amazon.jobs Israel OR remote",
-    "Director of Engineering OR Engineering Manager site:nvidia.com/en-us/about-nvidia/careers Israel OR remote"
+    "Director of Engineering OR Engineering Manager site:nvidia.com/en-us/about-nvidia/careers Israel OR remote",
+    "Director of Engineering OR Engineering Manager Amdocs Israel site:amdocs.com/careers OR site:linkedin.com/jobs",
+    "Director of Engineering OR VP Engineering Salesforce Israel site:salesforce.com/careers OR site:linkedin.com/jobs",
+    "Director of Engineering OR VP Engineering \"Palo Alto Networks\" Israel site:paloaltonetworks.com/company/careers OR site:linkedin.com/jobs",
+    "Director of Engineering OR VP Engineering IBM Israel site:ibm.com/careers OR site:linkedin.com/jobs"
   ]
 }
