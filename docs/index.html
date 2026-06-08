@@ -303,7 +303,8 @@ svg { display: block; }
 .status-btn.applied  { border-color: #9C27B0; color: #9C27B0; }
 .status-btn.interview{ border-color: #FFA726; color: #FFA726; }
 .status-btn.offer    { border-color: #4CAF50; color: #4CAF50; }
-.status-btn.rejected { border-color: #EF5350; color: #EF5350; }
+.status-btn.rejected   { border-color: #EF5350; color: #EF5350; }
+.status-btn.irrelevant { border-color: #616161; color: #9E9E9E; }
 .status-btn.active-status {
   color: #fff !important;
 }
@@ -311,7 +312,8 @@ svg { display: block; }
 .status-btn.applied.active-status  { background: #9C27B0; }
 .status-btn.interview.active-status{ background: #FFA726; }
 .status-btn.offer.active-status    { background: #4CAF50; }
-.status-btn.rejected.active-status { background: #EF5350; }
+.status-btn.rejected.active-status   { background: #EF5350; }
+.status-btn.irrelevant.active-status { background: #616161; color: #fff !important; }
 
 .card-link {
   margin-left: auto; font-size: 11px; padding: 4px 8px;
@@ -625,6 +627,31 @@ svg { display: block; }
 .ai-modal-body li { margin-bottom: 4px; }
 .ai-modal-body hr { border: none; border-top: 1px solid var(--md-outline-variant); margin: 16px 0; }
 
+/* Company chips */
+.company-chip {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 12px; border-radius: var(--radius-m);
+  background: var(--md-surface-1);
+  border: 1.5px solid var(--md-outline-variant);
+  font-size: 13px; font-weight: 500;
+  color: var(--md-on-surface);
+  transition: border-color 0.15s;
+  cursor: default;
+}
+.company-chip.has-jobs {
+  border-color: var(--md-primary);
+  background: color-mix(in srgb, var(--md-primary) 8%, var(--md-surface-1));
+}
+.company-chip .chip-count {
+  font-size: 11px; font-weight: 700;
+  background: var(--md-primary-container);
+  color: var(--md-on-primary-container);
+  padding: 1px 6px; border-radius: 10px;
+}
+.company-chip.has-jobs .chip-source {
+  font-size: 10px; color: var(--md-on-surface-variant);
+}
+
 /* Responsive */
 @media (min-width: 640px) {
   .jobs-list { max-width: 640px; margin: 0 auto; }
@@ -673,6 +700,7 @@ svg { display: block; }
         <button class="filter-chip" data-filter="score8">Score 8+</button>
         <button class="filter-chip" data-filter="remote">Remote</button>
         <button class="filter-chip" data-filter="relocation">✈️ Relocation</button>
+        <button class="filter-chip" data-filter="irrelevant">🚫 Irrelevant</button>
       </div>
       <div class="jobs-list" id="jobsList"></div>
     </div>
@@ -694,6 +722,21 @@ svg { display: block; }
           <h3>Status Breakdown</h3>
           <canvas id="statusChart" height="180"></canvas>
         </div>
+      </div>
+    </div>
+
+    <!-- COMPANIES PAGE -->
+    <div id="page-companies" class="page">
+      <div class="analytics-page">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+          <div class="analytics-title" style="margin:0">🏢 Companies</div>
+          <div id="companiesCount" style="font-size:13px;color:var(--md-on-surface-variant)"></div>
+        </div>
+        <div class="search-input-wrap" style="margin-bottom:16px;max-width:100%">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="color:var(--md-on-surface-variant);flex-shrink:0"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          <input type="search" id="companiesSearch" placeholder="Filter companies…" autocomplete="off">
+        </div>
+        <div id="companiesList" style="display:flex;flex-wrap:wrap;gap:8px"></div>
       </div>
     </div>
 
@@ -730,6 +773,10 @@ How are you feeling today?
     <button class="nav-item" data-page="analytics">
       <div class="nav-indicator"><span class="nav-icon">📊</span></div>
       <span class="nav-label">Analytics</span>
+    </button>
+    <button class="nav-item" data-page="companies">
+      <div class="nav-indicator"><span class="nav-icon">🏢</span></div>
+      <span class="nav-label">Companies</span>
     </button>
     <button class="nav-item" data-page="support">
       <div class="nav-indicator"><span class="nav-icon">💙</span></div>
@@ -890,8 +937,8 @@ How are you feeling today?
 const HAIKU = 'claude-haiku-4-5-20251001';
 const SONNET = 'claude-sonnet-4-6';
 const OPUS = 'claude-opus-4-6';
-const STATUSES = ['saved','applied','interview','offer','rejected'];
-const STATUS_EMOJI = {saved:'💾',applied:'📤',interview:'🎙️',offer:'🎉',rejected:'❌'};
+const STATUSES = ['saved','applied','interview','offer','rejected','irrelevant'];
+const STATUS_EMOJI = {saved:'💾',applied:'📤',interview:'🎙️',offer:'🎉',rejected:'❌',irrelevant:'🚫'};
 
 // ═══════════════════════════════════════════════
 // STORE — localStorage persistence
@@ -1177,6 +1224,9 @@ function applyFilters() {
     if (activeFilter === 'score8' && (job.fit_score || 0) < 8) return false;
     if (activeFilter === 'remote' && !isRemote(job.location || '')) return false;
     if (activeFilter === 'relocation' && !job.relocation_required) return false;
+    if (activeFilter === 'irrelevant' && status !== 'irrelevant') return false;
+    // Hide irrelevant from all other views
+    if (activeFilter !== 'irrelevant' && status === 'irrelevant') return false;
     // Search
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
@@ -1573,6 +1623,48 @@ function saveManualJob() {
 }
 
 // ═══════════════════════════════════════════════
+// COMPANIES PAGE
+// ═══════════════════════════════════════════════
+let configCompanies = [];
+
+async function loadConfigCompanies() {
+  try {
+    const r = await fetch('./scored_jobs.json?t=' + Date.now());
+    // Companies come from the pipeline config — embed them at build time or derive from jobs
+  } catch {}
+  // Hardcoded from config.json (kept in sync manually or via pipeline)
+  configCompanies = ["wix","monday","fiverr","similar-web","kaltura","checkmarx","perion","taboola","outbrain","gong","papaya-global","rapyd","tipalti","payoneer","nuvei","fundbox","lemonade","next-insurance","hippo","deel","rippling","lattice","linear","notion","vercel","netlify","render","planetscale","neon","anthropic","cohere","hugging-face","weights-biases","cloudflare","datadog","elastic","hashicorp","confluent","snyk","cyberark","forter","riskified","namogoo","optimove","ironsource","appsflyer","ironvest","varonis","armis","axonius","orca-security","wiz","aquasec","aiola","guesty","trigo","pagaya","earnest","bigpanda","anodot","lightricks","solaredge","amdocs","salesforce","palo-alto-networks","ibm","silverfort","panaya","intuit","autodesk","cyera","overwolf","rubrik","wsc-sports","natural-intelligence","servicenow","imperva","akamai","semperis","remitly","innovid","aidoc","bigid","etoro","nice","verint","coralogix","optibus","glassbox","digital-turbine","checkpoint","priority-software","lsports","playtika","sysaid","altshare","walkme","radware","mend","sap","algosec","allot","anyword","artlist","audiocodes","bluevine","cellebrite","claroty","cognyte","doubleverify","fireblocks","forescout","gett","global-e","hibob","houzz","infinidat","island","jfrog","melio","moon-active","myheritage","navan","placer-ai","plarium","redis","sapiens","sentinelone","sisense","skai","stratasys","synamedia","teads","trax-retail","vast-data","verbit","888-holdings","actimize","any-do","applause","oddity","via-transportation","yotpo","ai21-labs","at-bay","atera-networks","biocatch","bizzabo","bright-data","bringg","cheq","cloudinary","connecteam","controlup","coro","cymulate","cynet","datarails","dealhub","dream-security","drivenets","duda","dynamic-yield","earnix","elementor","exodigo","fabric","firebolt","hailo","honeybook","hunters","innoviz"];
+}
+
+function renderCompanies(filter = '') {
+  const q = filter.toLowerCase();
+  const jobsByCompany = {};
+  allJobs.forEach(j => {
+    const c = (j.company || '').toLowerCase();
+    jobsByCompany[c] = (jobsByCompany[c] || 0) + 1;
+  });
+
+  const list = configCompanies
+    .map(slug => {
+      const display = slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+      return { slug, display, count: jobsByCompany[display.toLowerCase()] || jobsByCompany[slug.toLowerCase()] || 0 };
+    })
+    .filter(c => !q || c.display.toLowerCase().includes(q) || c.slug.includes(q))
+    .sort((a, b) => b.count - a.count || a.display.localeCompare(b.display));
+
+  const container = document.getElementById('companiesList');
+  const countEl = document.getElementById('companiesCount');
+  countEl.textContent = `${list.length} companies`;
+
+  container.innerHTML = list.map(c => `
+    <div class="company-chip${c.count ? ' has-jobs' : ''}">
+      <span>${esc(c.display)}</span>
+      ${c.count ? `<span class="chip-count">${c.count} job${c.count > 1 ? 's' : ''}</span>` : ''}
+    </div>
+  `).join('');
+}
+
+// ═══════════════════════════════════════════════
 // ANALYTICS
 // ═══════════════════════════════════════════════
 let scoreChartInstance = null;
@@ -1777,7 +1869,9 @@ function switchPage(page) {
   const fab = document.getElementById('addJobFab');
   fab.style.display = page === 'jobs' ? 'flex' : 'none';
 
+
   if (page === 'analytics') renderAnalytics();
+  if (page === 'companies') renderCompanies(document.getElementById('companiesSearch').value);
 }
 
 // ═══════════════════════════════════════════════
@@ -1791,6 +1885,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Load data
   await loadJobs();
   applyFilters();
+  await loadConfigCompanies();
 
   // Navigation
   document.querySelectorAll('.nav-item').forEach(btn => {
@@ -1889,6 +1984,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const text = document.getElementById('aiModalBody').textContent;
     navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard'));
   });
+
+  // Companies search
+  document.getElementById('companiesSearch').addEventListener('input', e => renderCompanies(e.target.value));
 
   // Chat
   document.getElementById('sendBtn').addEventListener('click', sendChatMessage);
