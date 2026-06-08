@@ -1,6 +1,11 @@
 name: Deploy to GitHub Pages
 
 on:
+  # Deploy automatically after pipeline finishes (even with [skip ci] commits)
+  workflow_run:
+    workflows: ["Job Search Pipeline"]
+    types: [completed]
+  # Also deploy on direct pushes to docs/ (e.g. code changes)
   push:
     branches: [main]
     paths:
@@ -18,6 +23,8 @@ concurrency:
 
 jobs:
   deploy:
+    # For workflow_run trigger: only deploy if pipeline succeeded
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -26,6 +33,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # Get the latest commit (including pipeline's data push)
+          ref: main
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

@@ -225,6 +225,8 @@ After searching (use at least 4-5 searches), return ONLY a JSON array of 8-15 jo
             for block in resp.content:
                 if hasattr(block, "text"):
                     final_text += block.text
+            print(f"  Opus response length: {len(final_text)} chars")
+            print(f"  Opus response preview: {final_text[:300]!r}")
             break
 
         if resp.stop_reason == "tool_use":
@@ -245,23 +247,60 @@ After searching (use at least 4-5 searches), return ONLY a JSON array of 8-15 jo
             print(f"  [WARN] Unexpected stop_reason: {resp.stop_reason}")
             break
 
-    # If extraction fails, do a cleanup pass asking Claude to reformat
+    # Extract JSON — try direct parse first
     jobs = extract_json_array(final_text)
+    print(f"  Direct extraction: {len(jobs)} jobs")
+
+    # Cleanup pass: if Opus returned a narrative instead of JSON, ask Haiku to reformat
     if not jobs and final_text.strip():
-        print("  JSON extraction failed, asking Claude to reformat...")
+        print("  Asking Haiku to reformat Opus response as JSON...")
         try:
             cleanup = client.messages.create(
                 model="claude-haiku-4-5-20251001",
                 max_tokens=4096,
                 messages=[{
                     "role": "user",
-                    "content": f"Extract all job postings from the following text and return ONLY a valid JSON array. No markdown, no explanation, just the array starting with [ and ending with ].\n\nRequired fields per job: company, title, location, url, posted (YYYY-MM-DD), description.\n\nText:\n{final_text[:6000]}"
+                    "content": (
+                        "Extract all job postings from the text below. "
+                        "Return ONLY a valid JSON array — no markdown fences, no explanation. "
+                        "Start your response with [ and end with ].\n"
+                        "Required fields per job: company, title, location, url, posted (YYYY-MM-DD), description.\n\n"
+                        f"Text:\n{final_text[:6000]}"
+                    )
                 }]
             )
-            jobs = extract_json_array(cleanup.content[0].text)
+            cleanup_text = cleanup.content[0].text.strip()
+            print(f"  Haiku cleanup preview: {cleanup_text[:200]!r}")
+            jobs = extract_json_array(cleanup_text)
             print(f"  Cleanup pass found {len(jobs)} jobs")
         except Exception as e:
             print(f"  [WARN] Cleanup pass failed: {e}")
+
+    # Last resort: if still no jobs, ask Opus directly for just the JSON
+    if not jobs:
+        print("  Last resort: asking Opus to output JSON only...")
+        try:
+            retry = client.messages.create(
+                model="claude-opus-4-6",
+                max_tokens=4096,
+                system="You output only valid JSON arrays. No text before or after the array.",
+                messages=[
+                    *messages,
+                    {"role": "assistant", "content": final_text or "I found several job postings."},
+                    {"role": "user", "content": (
+                        "Output ONLY the JSON array of job postings you found. "
+                        "Format: [{\"company\":\"...\",\"title\":\"...\",\"location\":\"...\","
+                        "\"url\":\"...\",\"posted\":\"YYYY-MM-DD\",\"description\":\"...\"},...]\n"
+                        "Start with [ immediately."
+                    )}
+                ]
+            )
+            retry_text = retry.content[0].text.strip()
+            print(f"  Retry preview: {retry_text[:200]!r}")
+            jobs = extract_json_array(retry_text)
+            print(f"  Retry found {len(jobs)} jobs")
+        except Exception as e:
+            print(f"  [WARN] Last-resort retry failed: {e}")
     now = utcnow_iso()
     for job in jobs:
         job.setdefault("id", str(uuid.uuid4()))
