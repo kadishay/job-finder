@@ -447,14 +447,20 @@ Location: {job.get('location', '')}
 Posted: {job.get('posted', '')}
 Description: {job.get('description', '')}
 
-## Acceptable Locations
-{loc_str}, or fully Remote (includes "remote", "remote-first", "distributed", "worldwide")
+## Acceptable Locations (no relocation needed)
+{loc_str}, or fully global remote (e.g. "Remote", "Worldwide", "Distributed" — NOT country-specific remote like "Remote - United States")
 
 ## Return JSON (no other text):
-{{"fit_score": <integer 1-10>, "score_reason": "<1-2 sentences>", "ai_opener": "<personalized 1-sentence cover letter opener>", "location_ok": <true or false>}}
+{{"fit_score": <integer 1-10>, "score_reason": "<1-2 sentences>", "ai_opener": "<personalized 1-sentence cover letter opener>", "location_ok": <true or false>, "relocation_required": <true or false>}}
 
-Rules:
-- If location is NOT in acceptable locations AND not remote/worldwide → fit_score: 0, location_ok: false
+Location rules:
+- location_ok: true  → Israel, Tel Aviv, or fully global/worldwide remote
+- location_ok: false → any other location (specific country/city outside Israel, country-specific remote like "Remote - US", regional like "AMER"/"EMEA")
+- relocation_required: true  → location_ok is false BUT it's a real city/country (candidate could relocate)
+- relocation_required: false → location_ok is true (no relocation needed)
+- Do NOT set fit_score to 0 for relocation jobs — score on merit; the UI will label them "RELOCATION"
+
+Fit score rules:
 - Score 8-10: strong match on level + domain (AI, infra, platform) + company stage
 - Score 5-7: good match but partial domain or stage mismatch
 - Score 1-4: weak match (wrong level, legacy tech, wrong domain)"""
@@ -469,10 +475,10 @@ Rules:
             if result:
                 job.update(result)
             else:
-                job.update({"fit_score": 5, "score_reason": "Could not parse score", "ai_opener": "", "location_ok": True})
+                job.update({"fit_score": 5, "score_reason": "Could not parse score", "ai_opener": "", "location_ok": True, "relocation_required": False})
         except Exception as e:
             print(f"    [WARN] Scoring failed: {e}")
-            job.update({"fit_score": 5, "score_reason": "Scoring error", "ai_opener": "", "location_ok": True})
+            job.update({"fit_score": 5, "score_reason": "Scoring error", "ai_opener": "", "location_ok": True, "relocation_required": False})
 
         scored.append(job)
 
@@ -494,8 +500,9 @@ def filter_jobs(jobs: list[dict], config: dict) -> list[dict]:
         if score < min_score:
             rejected.append(f"{job.get('company','?')}: score {score} < {min_score}")
             continue
-        if not job.get("location_ok", True):
-            rejected.append(f"{job.get('company','?')}: location not OK")
+        # Allow relocation jobs through; only hard-reject if location_ok=False AND relocation_required=False
+        if not job.get("location_ok", True) and not job.get("relocation_required", False):
+            rejected.append(f"{job.get('company','?')}: location not OK and no relocation")
             continue
         posted_str = job.get("posted", "")
         if posted_str:

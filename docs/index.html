@@ -287,6 +287,7 @@ svg { display: block; }
 }
 .meta-chip.remote { background: color-mix(in srgb, var(--md-primary) 15%, transparent); color: var(--md-primary); }
 .meta-chip.source { background: color-mix(in srgb, var(--md-tertiary) 15%, transparent); color: var(--md-tertiary); }
+.meta-chip.relocation { background: color-mix(in srgb, #FF6F00 18%, transparent); color: #FF8F00; font-weight: 700; letter-spacing: 0.3px; }
 
 .status-row {
   padding: 0 16px 12px;
@@ -671,6 +672,7 @@ svg { display: block; }
         <button class="filter-chip" data-filter="rejected">Rejected</button>
         <button class="filter-chip" data-filter="score8">Score 8+</button>
         <button class="filter-chip" data-filter="remote">Remote</button>
+        <button class="filter-chip" data-filter="relocation">✈️ Relocation</button>
       </div>
       <div class="jobs-list" id="jobsList"></div>
     </div>
@@ -1059,6 +1061,7 @@ function renderJobCard(job) {
       <div class="card-company">${esc(job.company || '')}</div>
       <div class="card-title">${esc(job.title || '')}</div>
       <div class="card-meta">
+        ${job.relocation_required ? `<span class="meta-chip relocation">✈️ RELOCATION</span>` : ''}
         ${job.location ? `<span class="meta-chip${remote ? ' remote' : ''}">${remote ? '🌍 ' : '📍 '}${esc(job.location)}</span>` : ''}
         ${daysAgo !== null ? `<span class="meta-chip">${daysAgo === 0 ? 'today' : daysAgo + 'd ago'}</span>` : ''}
         ${source ? `<span class="meta-chip source">${source}</span>` : ''}
@@ -1173,6 +1176,7 @@ function applyFilters() {
     if (activeFilter === 'rejected' && status !== 'rejected') return false;
     if (activeFilter === 'score8' && (job.fit_score || 0) < 8) return false;
     if (activeFilter === 'remote' && !isRemote(job.location || '')) return false;
+    if (activeFilter === 'relocation' && !job.relocation_required) return false;
     // Search
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
