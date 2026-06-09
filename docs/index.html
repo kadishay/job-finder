@@ -699,7 +699,6 @@ svg { display: block; }
         <button class="filter-chip" data-filter="rejected">Rejected</button>
         <button class="filter-chip" data-filter="score8">Score 8+</button>
         <button class="filter-chip" data-filter="remote">Remote</button>
-        <button class="filter-chip" data-filter="relocation">✈️ Relocation</button>
         <button class="filter-chip" data-filter="irrelevant">🚫 Irrelevant</button>
       </div>
       <div class="jobs-list" id="jobsList"></div>
@@ -1108,7 +1107,6 @@ function renderJobCard(job) {
       <div class="card-company">${esc(job.company || '')}</div>
       <div class="card-title">${esc(job.title || '')}</div>
       <div class="card-meta">
-        ${job.relocation_required ? `<span class="meta-chip relocation">✈️ RELOCATION</span>` : ''}
         ${job.location ? `<span class="meta-chip${remote ? ' remote' : ''}">${remote ? '🌍 ' : '📍 '}${esc(job.location)}</span>` : ''}
         ${daysAgo !== null ? `<span class="meta-chip">${daysAgo === 0 ? 'today' : daysAgo + 'd ago'}</span>` : ''}
         ${source ? `<span class="meta-chip source">${source}</span>` : ''}
@@ -1223,7 +1221,6 @@ function applyFilters() {
     if (activeFilter === 'rejected' && status !== 'rejected') return false;
     if (activeFilter === 'score8' && (job.fit_score || 0) < 8) return false;
     if (activeFilter === 'remote' && !isRemote(job.location || '')) return false;
-    if (activeFilter === 'relocation' && !job.relocation_required) return false;
     if (activeFilter === 'irrelevant' && status !== 'irrelevant') return false;
     // Hide irrelevant from all other views
     if (activeFilter !== 'irrelevant' && status === 'irrelevant') return false;

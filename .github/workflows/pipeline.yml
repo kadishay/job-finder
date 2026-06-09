@@ -2,10 +2,8 @@ name: Job Search Pipeline
 
 on:
   schedule:
-    # 3x daily Sun–Thu: 07:00, 13:00, 19:00 UTC
+    # Once daily Sun–Thu at 07:00 UTC
     - cron: '0 7 * * 0-4'
-    - cron: '0 13 * * 0-4'
-    - cron: '0 19 * * 0-4'
   workflow_dispatch:  # allow manual trigger from GitHub UI
 
 permissions:

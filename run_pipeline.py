@@ -492,12 +492,11 @@ Description: {job.get('description', '')}
 ## Return JSON (no other text):
 {{"fit_score": <integer 1-10>, "score_reason": "<1-2 sentences>", "ai_opener": "<personalized 1-sentence cover letter opener>", "location_ok": <true or false>, "relocation_required": <true or false>}}
 
-Location rules:
-- location_ok: true  → Israel, Tel Aviv, or fully global/worldwide remote
-- location_ok: false → any other location (specific country/city outside Israel, country-specific remote like "Remote - US", regional like "AMER"/"EMEA")
-- relocation_required: true  → location_ok is false BUT it's a real city/country (candidate could relocate)
-- relocation_required: false → location_ok is true (no relocation needed)
-- Do NOT set fit_score to 0 for relocation jobs — score on merit; the UI will label them "RELOCATION"
+Location rules (be strict — jobs outside Israel will be rejected):
+- location_ok: true  → ONLY if location is explicitly in Israel (Israel, Tel Aviv, Netanya, Haifa, Herzliya, Ra'anana, Beer Sheva, etc.) OR fully global/worldwide remote (e.g. "Remote", "Worldwide", "Distributed" with no country specified)
+- location_ok: false → ANY other location including "Remote - United States", "USA", "New York", "AMER", "EMEA", India, or any non-Israel city/country
+- relocation_required: true  → location_ok is false but it's a real city/country
+- relocation_required: false → location_ok is true
 
 Fit score rules:
 - Score 8-10: strong match on level + domain (AI, infra, platform) + company stage
@@ -539,9 +538,9 @@ def filter_jobs(jobs: list[dict], config: dict) -> list[dict]:
         if score < min_score:
             rejected.append(f"{job.get('company','?')}: score {score} < {min_score}")
             continue
-        # Allow relocation jobs through; only hard-reject if location_ok=False AND relocation_required=False
-        if not job.get("location_ok", True) and not job.get("relocation_required", False):
-            rejected.append(f"{job.get('company','?')}: location not OK and no relocation")
+        # Reject all non-Israel/non-remote positions
+        if not job.get("location_ok", True):
+            rejected.append(f"{job.get('company','?')}: location not Israel/remote")
             continue
         posted_str = job.get("posted", "")
         if posted_str:
