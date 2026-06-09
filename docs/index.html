@@ -691,14 +691,14 @@ svg { display: block; }
         </div>
       </div>
       <div class="filter-row" id="filterRow">
-        <button class="filter-chip active" data-filter="all">All</button>
-        <button class="filter-chip" data-filter="open">Open</button>
-        <button class="filter-chip" data-filter="applied">Applied</button>
-        <button class="filter-chip" data-filter="interview">Interview</button>
-        <button class="filter-chip" data-filter="offer">Offer</button>
-        <button class="filter-chip" data-filter="rejected">Rejected</button>
-        <button class="filter-chip" data-filter="score8">Score 8+</button>
-        <button class="filter-chip" data-filter="remote">Remote</button>
+        <button class="filter-chip" data-filter="all">📋 All</button>
+        <button class="filter-chip active" data-filter="open">🔓 Open</button>
+        <button class="filter-chip" data-filter="applied">📤 Applied</button>
+        <button class="filter-chip" data-filter="interview">🎙️ Interview</button>
+        <button class="filter-chip" data-filter="offer">🎉 Offer</button>
+        <button class="filter-chip" data-filter="rejected">❌ Rejected</button>
+        <button class="filter-chip" data-filter="score8">⭐ Score 8+</button>
+        <button class="filter-chip" data-filter="remote">🌐 Remote</button>
         <button class="filter-chip" data-filter="irrelevant">🚫 Irrelevant</button>
       </div>
       <div class="jobs-list" id="jobsList"></div>
@@ -1206,7 +1206,7 @@ function attachCardListeners(job) {
 // ═══════════════════════════════════════════════
 // FILTERING & SEARCH
 // ═══════════════════════════════════════════════
-let activeFilter = 'all';
+let activeFilter = 'open';
 let searchQuery = '';
 
 function applyFilters() {
