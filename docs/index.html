@@ -299,7 +299,7 @@ svg { display: block; }
   border: 1.5px solid transparent;
   transition: all 0.15s;
 }
-.status-btn.saved    { border-color: #7986CB; color: #7986CB; }
+.status-btn.open     { border-color: #7986CB; color: #7986CB; }
 .status-btn.applied  { border-color: #9C27B0; color: #9C27B0; }
 .status-btn.interview{ border-color: #FFA726; color: #FFA726; }
 .status-btn.offer    { border-color: #4CAF50; color: #4CAF50; }
@@ -308,7 +308,7 @@ svg { display: block; }
 .status-btn.active-status {
   color: #fff !important;
 }
-.status-btn.saved.active-status    { background: #7986CB; }
+.status-btn.open.active-status     { background: #7986CB; }
 .status-btn.applied.active-status  { background: #9C27B0; }
 .status-btn.interview.active-status{ background: #FFA726; }
 .status-btn.offer.active-status    { background: #4CAF50; }
@@ -692,7 +692,7 @@ svg { display: block; }
       </div>
       <div class="filter-row" id="filterRow">
         <button class="filter-chip active" data-filter="all">All</button>
-        <button class="filter-chip" data-filter="saved">Saved</button>
+        <button class="filter-chip" data-filter="open">Open</button>
         <button class="filter-chip" data-filter="applied">Applied</button>
         <button class="filter-chip" data-filter="interview">Interview</button>
         <button class="filter-chip" data-filter="offer">Offer</button>
@@ -936,8 +936,8 @@ How are you feeling today?
 const HAIKU = 'claude-haiku-4-5-20251001';
 const SONNET = 'claude-sonnet-4-6';
 const OPUS = 'claude-opus-4-6';
-const STATUSES = ['saved','applied','interview','offer','rejected','irrelevant'];
-const STATUS_EMOJI = {saved:'💾',applied:'📤',interview:'🎙️',offer:'🎉',rejected:'❌',irrelevant:'🚫'};
+const STATUSES = ['open','applied','interview','offer','rejected','irrelevant'];
+const STATUS_EMOJI = {open:'📋',applied:'📤',interview:'🎙️',offer:'🎉',rejected:'❌',irrelevant:'🚫'};
 
 // ═══════════════════════════════════════════════
 // STORE — localStorage persistence
@@ -952,10 +952,10 @@ const Store = {
   get settings()     { return this._get('jf_settings', { apiKey: '', darkMode: true, profile: '' }); },
   set settings(v)    { this._set('jf_settings', v); },
 
-  getJobState(id)    { const all = this._get('jf_states', {}); return all[id] || { status: 'saved', notes: '', rounds: [] }; },
+  getJobState(id)    { const all = this._get('jf_states', {}); const s = all[id] || { status: 'open', notes: '', rounds: [] }; if (s.status === 'saved') s.status = 'open'; return s; },
   setJobState(id, s) {
     const all = this._get('jf_states', {});
-    all[id] = { ...(all[id] || { status:'saved', notes:'', rounds:[] }), ...s };
+    all[id] = { ...(all[id] || { status:'open', notes:'', rounds:[] }), ...s };
     this._set('jf_states', all);
   },
 
@@ -1214,7 +1214,7 @@ function applyFilters() {
     const state = Store.getJobState(job.id);
     const status = state.status;
     // Filter
-    if (activeFilter === 'saved' && status !== 'saved') return false;
+    if (activeFilter === 'open' && status !== 'open') return false;
     if (activeFilter === 'applied' && status !== 'applied') return false;
     if (activeFilter === 'interview' && status !== 'interview') return false;
     if (activeFilter === 'offer' && status !== 'offer') return false;
@@ -1610,7 +1610,7 @@ function saveManualJob() {
     ai_opener: '',
     location_ok: true,
     source: 'manual',
-    initial_status: 'saved',
+    initial_status: 'open',
     scraped_at: new Date().toISOString(),
   };
   Store.addManualJob(job);
@@ -1686,7 +1686,7 @@ function renderAnalytics() {
 
   // Funnel
   const funnelStages = [
-    { label: 'Saved', count: byStatus.saved, color: '#7986CB' },
+    { label: 'Open', count: byStatus.open, color: '#7986CB' },
     { label: 'Applied', count: byStatus.applied, color: '#9C27B0' },
     { label: 'Interview', count: byStatus.interview, color: '#FFA726' },
     { label: 'Offer', count: byStatus.offer, color: '#4CAF50' },
@@ -1736,7 +1736,7 @@ function renderAnalytics() {
   // Status pie chart
   const statusCtx = document.getElementById('statusChart').getContext('2d');
   if (statusChartInstance) statusChartInstance.destroy();
-  const statusColors = { saved:'#7986CB', applied:'#9C27B0', interview:'#FFA726', offer:'#4CAF50', rejected:'#EF5350' };
+  const statusColors = { open:'#7986CB', applied:'#9C27B0', interview:'#FFA726', offer:'#4CAF50', rejected:'#EF5350' };
   const statusData = STATUSES.filter(s => byStatus[s] > 0);
   statusChartInstance = new Chart(statusCtx, {
     type: 'doughnut',

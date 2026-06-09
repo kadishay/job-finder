@@ -1,4 +1,4 @@
-const CACHE = 'jobfinder-v2';
+const CACHE = 'jobfinder-v3';
 const STATIC = ['./','./index.html','./manifest.json'];
 
 self.addEventListener('install', e => {

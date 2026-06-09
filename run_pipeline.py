@@ -571,7 +571,7 @@ def merge_jobs(new_jobs: list[dict], existing_jobs: list[dict]) -> list[dict]:
     Merge strategy:
     - NEVER delete existing jobs (preserves manual + initial_status entries)
     - Add new jobs not already present (dedup by URL, then company+title)
-    - New pipeline jobs get initial_status = 'saved' if not set
+    - New pipeline jobs get initial_status = 'open' if not set
     """
     existing_urls = {j.get("url", "").strip().rstrip("/") for j in existing_jobs if j.get("url")}
     existing_keys = {
